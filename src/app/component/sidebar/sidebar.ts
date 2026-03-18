@@ -9,4 +9,11 @@ import { RouterModule } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss']
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  // สถานะเริ่มต้น: false = กางออก (เปิด), true = หดเข้า (ซ่อน)
+  isCollapsed = false;
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+}

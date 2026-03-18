@@ -20,16 +20,21 @@ $hover-bg: #f1f5f9;
   max-width: 100%; /* ให้เต็มจอ แล้วไปควบคุมข้างในเอา */
 }
 
-/* Sidebar ไม่ต้องแตะสไตล์ */
+/* 📌 แก้ไข: ปล่อยให้ Sidebar ยืดหดตามขนาดที่ตั้งไว้ในไฟล์ของมันเอง */
 .sidebar {
-  flex: 0 0 250px; 
+  flex-shrink: 0; 
 }
 
 /* Content */
 .content {
   flex: 1;
+  /* 📌 เพิ่ม 2 บรรทัดนี้เพื่อให้ขยายตาม Sidebar ได้สมูท และไม่ทะลุกรอบ */
+  min-width: 0; 
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
   padding: 2rem 3rem;
-  max-width: 1400px; /* จำกัดความกว้างเนื้อหา */
+  /* 💡 ถ้าอยากให้ตารางกว้างเต็มจอ 100% ให้เปลี่ยนบรรทัดล่างเป็น max-width: 100%; นะครับ */
+  max-width: 1400px; 
   margin: 0 auto;
 
   /* ส่วนหัวและ Filter */
