@@ -33,7 +33,7 @@ export class CreateTransactionComponent {
     if (this.form.valid) {
       const payload = { ...this.form.value }; // ไม่ต้องส่ง date
 
-      this.http.post('http://localhost:3001/api/transactions', payload)
+      this.http.post('https://ebas-backend.onrender.com/api/transactions', payload)
         .subscribe({
           next: (res) => {
             console.log('Transaction saved', res);
