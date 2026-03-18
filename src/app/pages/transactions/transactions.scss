@@ -17,24 +17,25 @@ $hover-bg: #f1f5f9;
 .layout {
   display: flex;
   width: 100%;
-  max-width: 100%; /* ให้เต็มจอ แล้วไปควบคุมข้างในเอา */
+  max-width: 100%;
+  /* ให้เต็มจอ แล้วไปควบคุมข้างในเอา */
 }
 
 /* 📌 แก้ไข: ปล่อยให้ Sidebar ยืดหดตามขนาดที่ตั้งไว้ในไฟล์ของมันเอง */
 .sidebar {
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 /* Content */
 .content {
   flex: 1;
   /* 📌 เพิ่ม 2 บรรทัดนี้เพื่อให้ขยายตาม Sidebar ได้สมูท และไม่ทะลุกรอบ */
-  min-width: 0; 
+  min-width: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   padding: 2rem 3rem;
   /* 💡 ถ้าอยากให้ตารางกว้างเต็มจอ 100% ให้เปลี่ยนบรรทัดล่างเป็น max-width: 100%; นะครับ */
-  max-width: 1400px; 
+  max-width: 1400px;
   margin: 0 auto;
 
   /* ส่วนหัวและ Filter */
@@ -52,7 +53,7 @@ $hover-bg: #f1f5f9;
       margin: 0;
       position: relative;
       display: inline-block;
-      
+
       background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -65,7 +66,7 @@ $hover-bg: #f1f5f9;
         left: 0;
         width: 40px;
         height: 4px;
-        background: $green-main; 
+        background: $green-main;
         border-radius: 4px;
       }
     }
@@ -86,7 +87,8 @@ $hover-bg: #f1f5f9;
         display: inline-block;
 
         select {
-          appearance: none; /* ซ่อนลูกศรเดิมของเบราว์เซอร์ */
+          appearance: none;
+          /* ซ่อนลูกศรเดิมของเบราว์เซอร์ */
           padding: 0.6rem 2.5rem 0.6rem 1.2rem;
           border-radius: 12px;
           border: 1px solid $border-color;
@@ -97,7 +99,7 @@ $hover-bg: #f1f5f9;
           color: $text-main;
           cursor: pointer;
           transition: all 0.2s ease;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
           &:focus {
             outline: none;
@@ -112,7 +114,8 @@ $hover-bg: #f1f5f9;
           top: 50%;
           transform: translateY(-50%);
           color: $text-muted;
-          pointer-events: none; /* ให้คลิกทะลุไปโดน select */
+          pointer-events: none;
+          /* ให้คลิกทะลุไปโดน select */
         }
       }
     }
@@ -123,8 +126,9 @@ $hover-bg: #f1f5f9;
     background: $white;
     border-radius: 24px;
     border: 1px solid $border-color;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-    overflow: hidden; /* ให้มุมมนครอบตาราง */
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    /* ให้มุมมนครอบตาราง */
   }
 
   .transactions-table {
@@ -132,7 +136,8 @@ $hover-bg: #f1f5f9;
     border-collapse: collapse;
     font-size: 0.95rem;
 
-    th, td {
+    th,
+    td {
       padding: 1.25rem 1.5rem;
       text-align: left;
       border-bottom: 1px solid $border-color;
@@ -161,7 +166,8 @@ $hover-bg: #f1f5f9;
       }
 
       &:last-child td {
-        border-bottom: none; /* เอาเส้นขอบล่างของแถวสุดท้ายออก */
+        border-bottom: none;
+        /* เอาเส้นขอบล่างของแถวสุดท้ายออก */
       }
     }
 
@@ -188,8 +194,14 @@ $hover-bg: #f1f5f9;
 
     td.amount {
       font-weight: 700;
-      &.income { color: $green-main; }
-      &.expense { color: $red-main; }
+
+      &.income {
+        color: $green-main;
+      }
+
+      &.expense {
+        color: $red-main;
+      }
     }
   }
 
@@ -203,9 +215,14 @@ $hover-bg: #f1f5f9;
     gap: 1rem;
     color: $text-muted;
 
-    p { margin: 0; font-weight: 500; }
-    
-    svg { color: #cbd5e1; }
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    svg {
+      color: #cbd5e1;
+    }
 
     .spinner {
       width: 32px;
@@ -218,7 +235,9 @@ $hover-bg: #f1f5f9;
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* Responsive */
@@ -226,23 +245,218 @@ $hover-bg: #f1f5f9;
     .layout {
       flex-direction: column;
     }
+
     .content {
       padding: 1.5rem;
-      
+
       .header-section {
         flex-direction: column;
         align-items: flex-start;
-        
-        h1 { font-size: 1.8rem; }
+
+        h1 {
+          font-size: 1.8rem;
+        }
       }
 
       .table-container {
-        overflow-x: auto; /* ให้เลื่อนตารางซ้ายขวาได้บนมือถือ */
+        overflow-x: auto;
+        /* ให้เลื่อนตารางซ้ายขวาได้บนมือถือ */
       }
-      
+
       .transactions-table {
-        min-width: 600px; /* บังคับความกว้างตารางไม่ให้บีบเละ */
+        min-width: 600px;
+        /* บังคับความกว้างตารางไม่ให้บีบเละ */
       }
     }
+  }
+}
+
+/* สไตล์พื้นฐานสำหรับปุ่มไอคอน */
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+  color: #71717a; // สีเทาพื้นฐาน
+
+  &:hover {
+    background-color: #f4f4f5; // พื้นหลังเทาอ่อนเมื่อ hover
+  }
+
+  svg {
+    display: block; // ป้องกันปัญหาระดับบรรทัด
+  }
+}
+
+/* สีเฉพาะสำหรับปุ่มแก้ไข */
+.btn-edit:hover {
+  color: #2563eb; // สีฟ้าเมื่อ hover
+  background-color: #dbeafe;
+}
+
+/* สีเฉพาะสำหรับปุ่มลบ */
+.btn-delete:hover {
+  color: #dc2626; // สีแดงเมื่อ hover
+  background-color: #fee2e2;
+}
+
+/* จัดวางคอลัมน์ปุ่ม */
+.action-col {
+  display: flex;
+  gap: 4px; // เว้นระยะห่างระหว่างปุ่ม
+  justify-content: center;
+}
+
+/* =========================================
+   สไตล์สำหรับ Modal (หน้าต่างลอยแก้ไขข้อมูล)
+   ========================================= */
+
+/* ทำให้พื้นหลังสีดำโปร่งแสง คลุมเต็มหน้าจอ และล็อคให้อยู่บนสุด */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* สีดำโปร่งแสง 50% */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  /* บังคับให้ลอยอยู่บนสุดของหน้าเว็บ */
+}
+
+/* กล่องหน้าต่างสีขาวตรงกลาง */
+.modal-content {
+  background-color: white;
+  padding: 24px 32px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  /* ขนาดความกว้างสูงสุดของหน้าต่าง */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #1f2937;
+    text-align: center;
+  }
+}
+
+/* การจัดวางฟอร์มแต่ละช่อง */
+.form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* ป้องกันไม่ให้ input ทะลุกรอบ */
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      /* สีฟ้าตอนกดพิมพ์ */
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+/* ปุ่ม ยกเลิก และ บันทึก */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+  }
+
+  .btn-cancel {
+    background-color: #f3f4f6;
+    color: #374151;
+
+    &:hover {
+      background-color: #e5e7eb;
+    }
+  }
+
+  .btn-save {
+    background-color: #3b82f6;
+    color: white;
+
+    &:hover {
+      background-color: #2563eb;
+    }
+  }
+}
+
+/* =========================================
+   สไตล์สำหรับ Pagination (การแบ่งหน้า)
+   ========================================= */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  /* จัดปุ่มไปทางขวา */
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 0 16px;
+
+  button {
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    color: #374151;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background-color: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: #f9fafb;
+    }
+  }
+
+  span {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
   }
 }
