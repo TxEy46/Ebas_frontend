@@ -1,86 +1,188 @@
-/* พื้นหลังเต็มจอ */
+$text-main: #0f172a;
+$text-muted: #64748b;
+$green-main: #10b981;
+$green-hover: #059669;
+$red-main: #ef4444;
+$white: #ffffff;
+$border-color: #e2e8f0;
+
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9fafb;
+  /* พื้นหลัง Gradient อ่อนๆ */
+  background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 1rem;
 }
 
-/* กล่อง login */
 .login-card {
-  background-color: #ffffff;
-  padding: 40px;
+  background-color: $white;
+  padding: 2.5rem 2.5rem;
   border-radius: 24px;
-  border: 1px solid #f1f5f9;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  max-width: 420px;
+  /* เงาแบบพรีเมียม */
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02);
+  /* แอนิเมชันเลื่อนขึ้นมาตอนโหลดหน้า */
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* หัวข้อ */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* โลโก้ด้านบน */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  
+  .logo-icon { color: $green-main; }
+  .logo-text {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    color: $text-main;
+    .highlight { color: $green-main; }
+  }
+}
+
 .login-title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-main;
   text-align: center;
-  margin-bottom: 32px;
+  margin: 0 0 0.5rem 0;
 }
 
-/* form spacing */
+.login-subtitle {
+  text-align: center;
+  color: $text-muted;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.25rem;
 }
 
-/* input */
-.login-input {
-  width: 100%;
-  padding: 12px 16px;
+/* กล่อง Input พร้อมไอคอน */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+    pointer-events: none; /* ให้คลิกทะลุไปโดน input ได้ */
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 3rem; /* เว้นที่ด้านซ้ายให้ไอคอน */
+    border-radius: 14px;
+    border: 1px solid $border-color;
+    font-size: 0.95rem;
+    color: $text-main;
+    background-color: #f8fafc;
+    outline: none;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:focus {
+      background-color: $white;
+      border-color: $green-main;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+  }
+
+  /* เวลาพิมพ์หรือคลิกในกล่อง ให้ไอคอนเปลี่ยนเป็นสีเขียว */
+  &:focus-within .input-icon {
+    color: $green-main;
+  }
+}
+
+/* กล่องแจ้งเตือน Error */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  background-color: #fef2f2;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s ease;
+  color: $red-main;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideUpFade 0.3s ease;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
 }
 
-/* focus */
-.login-input:focus {
-  border-color: #4ade80;
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.4);
-}
-
-/* error */
-.login-error {
-  color: #ef4444;
-  font-size: 14px;
-}
-
-/* button */
+/* ปุ่ม Login */
 .login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   width: 100%;
-  background-color: #22c55e;
+  background-color: $green-main;
   color: white;
   font-weight: 600;
-  padding: 12px;
-  border-radius: 12px;
+  font-size: 1rem;
+  padding: 0.9rem;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+
+  &:hover:not(:disabled) {
+    background-color: $green-hover;
+    transform: translateY(-2px); /* ลอยขึ้นนิดนึงเวลาเอาเมาส์ชี้ */
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* ไอคอนหมุนตอนโหลด */
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
 }
 
-/* hover */
-.login-button:hover {
-  background-color: #16a34a;
-}
-
-/* disabled */
-.login-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.login-loading {
-  color: #888;
-  font-size: 14px;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
