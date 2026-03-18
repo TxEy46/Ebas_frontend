@@ -1,0 +1,55 @@
+.sidebar {
+  width: 220px;
+  min-height: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  /* Glassmorphism แบบโปร่งและสว่าง */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(0,0,0,0.08);
+  border-radius: 0 25px 25px 0;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.08);
+
+  /* Liquid scroll */
+  position: sticky;
+  top: 20px;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
+  will-change: transform;
+
+  .logo {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #1f2937;
+    letter-spacing: 1px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 1rem 0;
+
+      a {
+        color: #1f2937;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 10px 14px;
+        border-radius: 15px;
+        display: block;
+        position: relative;
+        transition: all 0.3s;
+
+        &:hover {
+          color: #10b981;
+          background: rgba(16, 185, 129, 0.1);
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <h1 class="login-title">
+      Login
+    </h1>
+
+    <form (ngSubmit)="login()" #form="ngForm" class="login-form">
+
+      <input
+        type="text"
+        placeholder="Username"
+        [(ngModel)]="username"
+        name="username"
+        required
+        class="login-input"
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+        name="password"
+        required
+        class="login-input"
+      />
+
+      <!-- ❗ error -->
+      <p *ngIf="error" class="login-error">
+        {{ error }}
+      </p>
+
+      <!-- 🔥 loading -->
+      <p *ngIf="loading" class="login-loading">
+        กำลังตรวจสอบ...
+      </p>
+
+      <button
+        type="submit"
+        [disabled]="loading || form.invalid"
+        class="login-button"
+      >
+        {{ loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ' }}
+      </button>
+
+    </form>
+
+  </div>
+</div>
