@@ -8,9 +8,10 @@ import { SidebarComponent } from '../../component/sidebar/sidebar';
 interface Transaction {
   id: number;
   name: string;
-  date: Date;
+  createdate?: Date;
   category: string;
   amount: number;
+  type: 'income' | 'expense';
 }
 
 @Component({
@@ -44,8 +45,11 @@ export class DashboardComponent implements OnInit {
         next: (res) => {
           console.log("API RESPONSE:", res);
 
-          // แปลง date เป็น Date object
-          this.transactions = res.map(t => ({ ...t, date: new Date(t.date) }));
+          // แปลง createdate เป็น Date object และป้องกัน undefined
+          this.transactions = res.map(t => ({
+            ...t,
+            createdate: t.createdate ? new Date(t.createdate) : undefined
+          }));
 
           // อัพเดตสรุปและกราฟ
           this.updateSummary();
@@ -53,7 +57,7 @@ export class DashboardComponent implements OnInit {
 
           this.loading = false;
 
-          // 🔥 บังคับ Angular update UI
+          // 🔥 บังคับ Angular update UI หลังเปลี่ยนข้อมูล
           this.cd.detectChanges();
 
           // สร้าง Chart หลังข้อมูลพร้อม
@@ -67,9 +71,15 @@ export class DashboardComponent implements OnInit {
   }
 
   updateSummary() {
-    this.income = this.transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
-    this.expense = this.transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + t.amount, 0);
-    this.balance = this.income + this.expense;
+    this.income = this.transactions
+      .filter(t => t.type === 'income')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    this.expense = this.transactions
+      .filter(t => t.type === 'expense')
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    this.balance = this.income - this.expense; // Balance = income - expense
   }
 
   updateChartData() {
@@ -83,13 +93,14 @@ export class DashboardComponent implements OnInit {
       map.set(key, { name: d.toLocaleString('default', { month: 'short' }), income: 0, expense: 0 });
     }
 
-    // รวมยอดรายรับ-รายจ่าย
+    // รวมยอดรายรับ-รายจ่าย แยก type
     this.transactions.forEach(t => {
-      const key = `${t.date.getFullYear()}-${t.date.getMonth() + 1}`;
+      if (!t.createdate) return;
+      const key = `${t.createdate.getFullYear()}-${t.createdate.getMonth() + 1}`;
       if (map.has(key)) {
         const current = map.get(key)!;
-        if (t.amount > 0) current.income += t.amount;
-        else current.expense += Math.abs(t.amount);
+        if (t.type === 'income') current.income += t.amount;
+        else if (t.type === 'expense') current.expense += t.amount;
       }
     });
 
@@ -100,10 +111,8 @@ export class DashboardComponent implements OnInit {
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
     if (!ctx) return;
 
-    // ล้าง chart เก่า ถ้ามี
-    if (this.chart) {
-      this.chart.destroy();
-    }
+    // ล้าง chart เก่า
+    if (this.chart) this.chart.destroy();
 
     this.chart = new Chart(ctx, {
       type: 'bar',
@@ -124,12 +133,8 @@ export class DashboardComponent implements OnInit {
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { position: 'top' }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
+        plugins: { legend: { position: 'top' } },
+        scales: { y: { beginAtZero: true } }
       }
     });
   }

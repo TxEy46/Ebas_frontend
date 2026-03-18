@@ -1,53 +1,132 @@
+$text-main: #0f172a;
+$text-muted: #64748b;
+$green-main: #10b981;
+$green-light: #ecfdf5; 
+$red-main: #ef4444;
+$red-light: #fef2f2;
+$hover-bg: #f8fafc;
+$white: #ffffff;
+$border-color: #e2e8f0;
+
 .sidebar {
-  width: 220px;
-  min-height: auto;
-  padding: 1rem;
+  width: 100%;
+  height: 100vh; /* ความสูงเต็มจอ */
+  padding: 2rem 1.25rem;
   display: flex;
   flex-direction: column;
-
-  /* Glassmorphism แบบโปร่งและสว่าง */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-right: 1px solid rgba(0,0,0,0.08);
-  border-radius: 0 25px 25px 0;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.08);
-
-  /* Liquid scroll */
+  background: $white;
+  border-right: 1px solid $border-color;
+  
+  /* 📌 ทำให้ Sidebar ล็อคติดจอเวลาเลื่อนลง */
   position: sticky;
-  top: 20px;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); 
-  will-change: transform;
+  top: 0;
 
-  .logo {
-    font-size: 1.7rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
-    color: #1f2937;
-    letter-spacing: 1px;
+  .logo-container {
+    padding: 0 0.75rem;
+    margin-bottom: 2.5rem;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0;
+      color: $text-main;
+      letter-spacing: -0.5px;
+
+      .logo-icon {
+        color: $green-main;
+      }
+
+      span {
+        color: $green-main;
+      }
+    }
   }
 
-  ul {
+  .nav-links {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1; /* ดันเมนูให้เต็มพื้นที่ เพื่อให้ Logout ไปอยู่ล่างสุด */
 
     li {
-      margin: 1rem 0;
-
       a {
-        color: #1f2937;
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        color: $text-muted;
         text-decoration: none;
         font-weight: 600;
-        padding: 10px 14px;
-        border-radius: 15px;
-        display: block;
+        font-size: 0.95rem;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
         position: relative;
-        transition: all 0.3s;
+        transition: all 0.25s ease;
+
+        svg {
+          transition: transform 0.2s ease;
+        }
 
         &:hover {
-          color: #10b981;
-          background: rgba(16, 185, 129, 0.1);
-          transform: scale(1.05);
+          color: $text-main;
+          background: $hover-bg;
+          
+          svg {
+            transform: scale(1.1);
+            color: $green-main;
+          }
+        }
+
+        &.active {
+          color: $green-main;
+          background: $green-light;
+          font-weight: 700;
+
+          /* ลูกเล่นขีดสีเขียวด้านซ้ายตอน Active */
+          &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background-color: $green-main;
+            border-radius: 0 4px 4px 0;
+          }
+
+          svg {
+            color: $green-main;
+          }
+        }
+      }
+    }
+
+    .logout-item {
+      margin-top: auto; /* ดันปุ่มนี้ไปล่างสุดของ container */
+
+      .logout-link {
+        color: $red-main;
+
+        &:hover {
+          background: $red-light;
+          color: #dc2626;
+
+          svg {
+            color: #dc2626;
+            transform: translateX(3px); /* เลื่อนลูกศรออกไปทางขวานิดนึงตอน Hover */
+          }
+        }
+        
+        &.active {
+          &::before {
+            display: none; /* ซ่อนขีดเขียวสำหรับปุ่ม Logout */
+          }
         }
       }
     }

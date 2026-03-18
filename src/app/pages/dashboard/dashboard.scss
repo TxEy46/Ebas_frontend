@@ -1,155 +1,211 @@
+$app-bg: #f8fafc;
+$text-main: #0f172a;
+$text-muted: #64748b;
+$green-main: #10b981;
+$green-bg: #ecfdf5;
+$red-main: #ef4444;
+$red-bg: #fef2f2;
+$blue-main: #3b82f6;
+$blue-bg: #eff6ff;
+$white: #ffffff;
+$border-color: #e2e8f0;
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  font-family: 'Arial', sans-serif;
-  background: #f9fafb; // ธีมขาว
-  color: #1f2937;
-}
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: $app-bg;
+  color: $text-main;
 
-/* Sidebar */
-.sidebar {
-  width: 220px;
-  min-height: 100vh;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
+  /* Content area */
+  .dashboard-content {
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    max-width: 1400px;
+    margin: 0 auto;
 
-  /* Glassmorphism ขาว */
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-right: 1px solid rgba(0,0,0,0.08);
-  border-radius: 0 20px 20px 0;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+    /* ตกแต่งคำว่า Dashboard ใหม่ */
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 2.5rem;
+      position: relative;
+      display: inline-block;
+      
+      /* ไล่สีตัวอักษรให้ดูมีมิติ */
+      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
 
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 2rem;
-  }
+      /* ขีดเส้นใต้สั้นๆ เป็นลูกเล่นสีเขียว */
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 4px;
+        background: $green-main; 
+        border-radius: 4px;
+      }
+    }
 
-  ul {
-    list-style: none;
-    padding: 0;
+    /* สถานะโหลดข้อมูล */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: $text-muted;
+      font-weight: 500;
+      font-size: 1.1rem;
+      background: $white;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    }
 
-    li {
-      margin: 1rem 0;
+    /* Summary Cards */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
 
-      a {
-        color: #1f2937;
-        text-decoration: none;
-        font-weight: 500;
-        padding: 8px 12px;
-        border-radius: 12px;
-        display: block;
-        transition: 0.2s;
+      .card {
+        background: $white;
+        border-radius: 24px;
+        padding: 1.8rem;
+        border: 1px solid $border-color;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
         &:hover {
-          background: rgba(16, 185, 129, 0.15);
-          color: #10b981;
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        p {
+          margin: 0 0 0.5rem 0;
+          font-weight: 600;
+          color: $text-muted;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        h2 {
+          margin: 0;
+          font-size: 2rem;
+          font-weight: 800;
+          letter-spacing: -1px;
+        }
+
+        /* ขีดสีใต้ Card เพื่อเน้นสายตา */
+        &.income { 
+          h2 { color: $green-main; } 
+          border-bottom: 4px solid $green-main;
+        }
+        &.expense { 
+          h2 { color: $red-main; } 
+          border-bottom: 4px solid $red-main;
+        }
+        &.balance { 
+          h2 { color: $blue-main; } 
+          border-bottom: 4px solid $blue-main;
+        }
+      }
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: $white;
+      border-radius: 24px;
+      border: 1px solid $border-color;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Transactions Table */
+    .transactions {
+      background: $white;
+      border-radius: 24px;
+      border: 1px solid $border-color;
+      padding: 2rem;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      overflow-x: auto;
+
+      h3 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $text-main;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        color: $text-main;
+        font-size: 0.95rem;
+
+        th, td {
+          padding: 1rem 0.5rem;
+          text-align: left;
+          border-bottom: 1px solid $border-color;
+        }
+
+        th {
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+          border-bottom: 2px solid $border-color;
+        }
+
+        tbody tr {
+          transition: background-color 0.2s ease;
+          &:hover { background-color: $app-bg; }
+          &:last-child td { border-bottom: none; }
+        }
+
+        /* Badge for Type column */
+        .badge {
+          padding: 0.4rem 0.8rem;
+          border-radius: 100px;
+          font-weight: 600;
+          font-size: 0.8rem;
+          display: inline-block;
+
+          &.income { background: $green-bg; color: #065f46; }
+          &.expense { background: $red-bg; color: #991b1b; }
+        }
+
+        /* Text colors for amount */
+        td.amount {
+          font-weight: 700;
+          &.income { color: $green-main; }
+          &.expense { color: $red-main; }
         }
       }
     }
   }
 }
 
-/* Content area */
-.dashboard-content {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
+/* Responsive */
+@media(max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
 
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2rem;
-    color: #1f2937;
-  }
-
-  .summary {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-
-    .card {
-      flex: 1;
-      min-width: 150px;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 20px;
-      border: 1px solid rgba(0,0,0,0.08);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-      padding: 20px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-
-      &:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-      }
-
-      p {
-        margin: 0;
-        font-weight: 500;
-        color: #6b7280;
-      }
-
-      h2 {
-        margin-top: 5px;
-        font-size: 1.5rem;
-      }
-
-      &.income h2 { color: #10b981; }
-      &.expense h2 { color: #ef4444; }
-      &.balance h2 { color: #3b82f6; } // สีน้ำเงินสำหรับ balance
-    }
-  }
-
-  .chart-container {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-    padding: 20px;
-    margin-bottom: 2rem;
-  }
-
-  .transactions {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.08);
-    padding: 20px;
-    overflow-x: auto;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-
-    h3 {
-      margin-bottom: 15px;
-      font-size: 1.25rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #1f2937;
-
-      th, td {
-        padding: 0.5rem;
-        text-align: left;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-      }
-
-      td.income { color: #10b981; font-weight: 600; }
-      td.expense { color: #ef4444; font-weight: 600; }
-
-      th {
-        font-weight: 600;
-        color: #374151;
+    .dashboard-content {
+      padding: 1.5rem;
+      
+      h1 {
+        font-size: 1.8rem; /* ย่อขนาด h1 ลงบนมือถือ */
       }
     }
   }

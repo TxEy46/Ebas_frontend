@@ -1,0 +1,243 @@
+$app-bg: #f8fafc;
+$text-main: #0f172a;
+$text-muted: #64748b;
+$green-main: #10b981;
+$red-main: #ef4444;
+$white: #ffffff;
+$border-color: #e2e8f0;
+$hover-bg: #f1f5f9;
+
+.page-layout {
+  min-height: 100vh;
+  background-color: $app-bg;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: $text-main;
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+  max-width: 100%; /* ให้เต็มจอ แล้วไปควบคุมข้างในเอา */
+}
+
+/* Sidebar ไม่ต้องแตะสไตล์ */
+.sidebar {
+  flex: 0 0 250px; 
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 2rem 3rem;
+  max-width: 1400px; /* จำกัดความกว้างเนื้อหา */
+  margin: 0 auto;
+
+  /* ส่วนหัวและ Filter */
+  .header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0;
+      position: relative;
+      display: inline-block;
+      
+      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 4px;
+        background: $green-main; 
+        border-radius: 4px;
+      }
+    }
+
+    .filter {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      label {
+        font-weight: 600;
+        color: $text-muted;
+        font-size: 0.95rem;
+      }
+
+      .select-wrapper {
+        position: relative;
+        display: inline-block;
+
+        select {
+          appearance: none; /* ซ่อนลูกศรเดิมของเบราว์เซอร์ */
+          padding: 0.6rem 2.5rem 0.6rem 1.2rem;
+          border-radius: 12px;
+          border: 1px solid $border-color;
+          background: $white;
+          font-family: inherit;
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: $text-main;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+
+          &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+        }
+
+        .chevron {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: $text-muted;
+          pointer-events: none; /* ให้คลิกทะลุไปโดน select */
+        }
+      }
+    }
+  }
+
+  /* ตารางใน Card */
+  .table-container {
+    background: $white;
+    border-radius: 24px;
+    border: 1px solid $border-color;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    overflow: hidden; /* ให้มุมมนครอบตาราง */
+  }
+
+  .transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+
+    th, td {
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid $border-color;
+    }
+
+    /* จัดชิดขวาสำหรับคอลัมน์ตัวเลขและวันที่ */
+    .align-right {
+      text-align: right;
+    }
+
+    th {
+      background: $white;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid $border-color;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background: $hover-bg;
+      }
+
+      &:last-child td {
+        border-bottom: none; /* เอาเส้นขอบล่างของแถวสุดท้ายออก */
+      }
+    }
+
+    .fw-500 {
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    .date-col {
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: $app-bg;
+      border: 1px solid $border-color;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: $text-muted;
+    }
+
+    td.amount {
+      font-weight: 700;
+      &.income { color: $green-main; }
+      &.expense { color: $red-main; }
+    }
+  }
+
+  /* สถานะโหลดข้อมูล / ว่างเปล่า */
+  .state-message {
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: $text-muted;
+
+    p { margin: 0; font-weight: 500; }
+    
+    svg { color: #cbd5e1; }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid $border-color;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .layout {
+      flex-direction: column;
+    }
+    .content {
+      padding: 1.5rem;
+      
+      .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        h1 { font-size: 1.8rem; }
+      }
+
+      .table-container {
+        overflow-x: auto; /* ให้เลื่อนตารางซ้ายขวาได้บนมือถือ */
+      }
+      
+      .transactions-table {
+        min-width: 600px; /* บังคับความกว้างตารางไม่ให้บีบเละ */
+      }
+    }
+  }
+}
