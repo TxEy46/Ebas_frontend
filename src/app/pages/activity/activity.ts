@@ -18,7 +18,7 @@ export class ActivityComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
-    this.http.get<any[]>('http://localhost:3001/api/transactions')
+    this.http.get<any[]>('https://ebas-backend.onrender.com/api/transactions')
       .subscribe({
         next: (res) => {
           this.transactions = res;

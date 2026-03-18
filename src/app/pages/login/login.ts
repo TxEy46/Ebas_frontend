@@ -25,7 +25,7 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
 
-    this.http.post('http://localhost:3001/api/login', {
+    this.http.post('https://ebas-backend.onrender.com/api/login', {
       username: this.username,
       password: this.password
     }).subscribe({

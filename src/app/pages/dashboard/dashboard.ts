@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchTransactions() {
-    this.http.get<Transaction[]>('http://localhost:3001/api/transactions')
+    this.http.get<Transaction[]>('https://ebas-backend.onrender.com/api/transactions')
       .subscribe({
         next: (res) => {
           console.log("API RESPONSE:", res);
