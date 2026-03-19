@@ -6,103 +6,114 @@ $red-main: #ef4444;
 $white: #ffffff;
 $border-color: #e2e8f0;
 
-.login-page {
+// แก้ปัญหาฟิลด์เกินขอบ (Expanded)
+* {
+  box-sizing: border-box;
+}
+
+.auth-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* พื้นหลัง Gradient อ่อนๆ */
   background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
   font-family: 'Inter', -apple-system, sans-serif;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
-.login-card {
+.auth-card {
   background-color: $white;
-  padding: 2.5rem 2.5rem;
+  padding: 2.5rem;
   border-radius: 24px;
-  width: 100%;
-  max-width: 420px;
-  /* เงาแบบพรีเมียม */
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02);
-  /* แอนิเมชันเลื่อนขึ้นมาตอนโหลดหน้า */
+
+  // --- จุดสำคัญที่ต้องแก้ ---
+  width: 100%; // บังคับให้ขยายเต็มที่เท่าที่จะทำได้
+  max-width: 500px; // กำหนดเพดานความกว้างให้เท่ากันทุกหน้า (แนะนำ 400px กำลังสวย)
+  min-width: 320px; // กันไม่ให้การ์ดจิ๋วเกินไปในมือถือรุ่นเก่า
+
+  // จัดการ Box Model
+  box-sizing: border-box;
+
+  // เงาและ Animation
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
   animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+  // จัดให้อยู่กึ่งกลางเสมอ (กรณีไม่ได้ใช้ flex จากตัวแม่)
+  margin: 0 auto;
 }
 
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* โลโก้ด้านบน */
 .logo-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  
-  .logo-icon { color: $green-main; }
+
+  .logo-icon {
+    color: $green-main;
+  }
+
   .logo-text {
     font-size: 1.8rem;
     font-weight: 800;
     margin: 0;
     color: $text-main;
-    .highlight { color: $green-main; }
+
+    .highlight {
+      color: $green-main;
+    }
   }
 }
 
-.login-title {
+.auth-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: $text-main;
   text-align: center;
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 0.5rem;
 }
 
-.login-subtitle {
+.auth-subtitle {
   text-align: center;
   color: $text-muted;
   font-size: 0.95rem;
   margin-bottom: 2rem;
 }
 
-.login-form {
+.auth-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-/* กล่อง Input พร้อมไอคอน */
 .input-group {
   position: relative;
-  display: flex;
-  align-items: center;
+  width: 100%;
 
   .input-icon {
     position: absolute;
-    left: 1rem;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
     width: 20px;
     height: 20px;
     color: #94a3b8;
     transition: color 0.2s ease;
-    pointer-events: none; /* ให้คลิกทะลุไปโดน input ได้ */
+    z-index: 1;
+    pointer-events: none;
   }
 
-  .login-input {
+  .auth-input {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 3rem; /* เว้นที่ด้านซ้ายให้ไอคอน */
+    display: block; // Expanded
+    padding: 0.85rem 1rem 0.85rem 3.2rem;
     border-radius: 14px;
     border: 1px solid $border-color;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: $text-main;
     background-color: #f8fafc;
     outline: none;
     transition: all 0.2s ease;
-
-    &::placeholder {
-      color: #94a3b8;
-    }
 
     &:focus {
       background-color: $white;
@@ -111,13 +122,11 @@ $border-color: #e2e8f0;
     }
   }
 
-  /* เวลาพิมพ์หรือคลิกในกล่อง ให้ไอคอนเปลี่ยนเป็นสีเขียว */
   &:focus-within .input-icon {
     color: $green-main;
   }
 }
 
-/* กล่องแจ้งเตือน Error */
 .error-message {
   display: flex;
   align-items: center;
@@ -127,9 +136,13 @@ $border-color: #e2e8f0;
   border-radius: 12px;
   color: $red-main;
   font-size: 0.9rem;
-  font-weight: 500;
-  animation: slideUpFade 0.3s ease;
-  
+  font-weight: 600;
+  border: 1px solid rgba($red-main, 0.1);
+
+  &.shake-animation {
+    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+  }
+
   svg {
     width: 18px;
     height: 18px;
@@ -137,83 +150,109 @@ $border-color: #e2e8f0;
   }
 }
 
-/* ปุ่ม Login */
-.login-button {
+.auth-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
+  min-height: 52px;
   background-color: $green-main;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
-  padding: 0.9rem;
   border-radius: 14px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 0.5rem;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
 
   &:hover:not(:disabled) {
     background-color: $green-hover;
-    transform: translateY(-2px); /* ลอยขึ้นนิดนึงเวลาเอาเมาส์ชี้ */
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -5px rgba(16, 185, 129, 0.3);
   }
 
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+    background-color: #cbd5e1;
     box-shadow: none;
   }
 
-  /* ไอคอนหมุนตอนโหลด */
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   .spinner {
     width: 18px;
     height: 18px;
-    border: 2.5px solid rgba(255,255,255,0.3);
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
     border-top-color: white;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* เพิ่มต่อท้ายไฟล์ login.scss */
-.register-hint {
+.login-hint {
   text-align: center;
   margin-top: 1.5rem;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: $text-muted;
 
-  .register-link {
+  .login-link {
     color: $green-main;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    text-decoration: none;
-    transition: color 0.2s;
 
     &:hover {
-      color: $green-hover;
       text-decoration: underline;
+      color: $green-hover;
     }
   }
 }
 
-/* ปรับปรุง Spinner ให้ขนาดนิ่งขึ้น */
-.login-button {
-  min-height: 52px; /* ล็อคความสูงปุ่มไม่ให้ดิ้นตอน Loading */
-  
-  .spinner {
-    margin-right: 8px;
-    flex-shrink: 0;
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shake {
+
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }

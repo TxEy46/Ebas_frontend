@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -17,10 +17,13 @@ export class LoginComponent {
   error = '';
   loading = false;
 
-  // แนะนำให้แยก URL ไว้เป็นตัวแปรกลาง
   serverUrl = 'https://ebas-backend.onrender.com';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    private cdr: ChangeDetectorRef // เพิ่มตัวจัดการการวาดหน้าจอใหม่
+  ) { }
 
   login() {
     if (this.loading) return;
@@ -28,37 +31,45 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
 
-    this.http.post<any>(this.serverUrl + '/api/login', {
-      username: this.username.trim(), // ตัดช่องว่างออก
+    // บังคับ Update UI ให้แสดงสถานะ Loading
+    this.cdr.detectChanges();
+
+    const payload = {
+      username: this.username.trim(),
       password: this.password
-    }).subscribe({
+    };
+
+    this.http.post<any>(`${this.serverUrl}/api/login`, payload).subscribe({
       next: (res) => {
-        console.log("LOGIN SUCCESS", res);
-
-        // 📌 เก็บข้อมูล User ไว้ใน LocalStorage เพื่อให้หน้าอื่นดึงไปใช้ได้
-        localStorage.setItem('user', JSON.stringify(res.user));
-
         this.loading = false;
+        this.cdr.detectChanges(); // บังคับ Update ก่อนย้ายหน้า
+        
+        localStorage.setItem('user', JSON.stringify(res.user));
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error("LOGIN ERROR", err);
+        console.log("เข้าสู่ Error Block แล้ว");
         this.loading = false;
 
-        // แสดง Error ตามที่ Backend ส่งมา หรือค่าเริ่มต้น
+        // ดักจับ Status 401 หรืออื่นๆ
         if (err.status === 401) {
-          this.error = 'Username หรือ Password ไม่ถูกต้อง';
+          this.error = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+        } else if (err.status === 404) {
+          this.error = 'ไม่พบผู้ใช้งานนี้ในระบบ';
         } else if (err.status === 0) {
           this.error = 'ไม่สามารถเชื่อมต่อ Server ได้';
         } else {
-          this.error = 'เกิดข้อผิดพลาดกรุณาลองใหม่';
+          this.error = err.error?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่';
         }
+
+        // --- จุดสำคัญ: สั่งให้ Angular วาดหน้าจอใหม่ทันที ---
+        // ปุ่มจะหายหมุน และ Error จะแสดงทันที
+        this.cdr.detectChanges(); 
       }
     });
   }
 
   goToRegister() {
     this.router.navigate(['/register']);
-    // หมายเหตุ: อย่าลืมไปตั้งค่า path ใน app.routes.ts ด้วยนะ
   }
 }
