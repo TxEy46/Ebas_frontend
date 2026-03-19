@@ -1,70 +1,134 @@
 <div class="dashboard-layout">
-  
-  <app-sidebar></app-sidebar>
+  <app-sidebar class="sidebar"></app-sidebar>
 
   <div class="dashboard-content">
-    
-    <h1>Dashboard</h1>
+    <div class="header-section">
+      <h1>Dashboard</h1>
+      <p class="subtitle">Overview for Current Month</p>
+    </div>
 
     <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
       Loading your financial data...
     </div>
 
-    <div *ngIf="!loading">
+    <div *ngIf="!loading" class="fade-in">
       
       <div class="summary">
         <div class="card income">
-          <p>Income</p>
-          <h2>${{ formatMoney(income) }}</h2>
+          <div class="card-header">
+            <p>Income</p>
+            <div class="icon-bg"><span class="icon">↓</span></div>
+          </div>
+          <h2>${{ formatMoney(currentMonthIncome) }}</h2>
         </div>
+        
         <div class="card expense">
-          <p>Expense</p>
-          <h2>${{ formatMoney(expense) }}</h2>
+          <div class="card-header">
+            <p>Expense</p>
+            <div class="icon-bg"><span class="icon">↑</span></div>
+          </div>
+          <h2>${{ formatMoney(currentMonthExpense) }}</h2>
+
+          <div class="budget-section" *ngIf="budgetAmount > 0">
+            <div class="budget-labels">
+              <span>{{ budgetUsedPercent > 100 ? '>100' : (budgetUsedPercent | number:'1.0-0') }}% of Budget</span>
+              <span class="budget-amount-clickable" (click)="openBudgetModal()" title="Edit Budget">
+                ${{ formatMoney(budgetAmount) }} <span class="edit-icon">✎</span>
+              </span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" 
+                   [style.width.%]="budgetUsedPercent > 100 ? 100 : budgetUsedPercent"
+                   [style.background-color]="budgetStatusColor">
+              </div>
+            </div>
+            <p class="budget-warning" *ngIf="budgetUsedPercent >= 100">
+              ⚠️ You have exceeded your monthly budget!
+            </p>
+          </div>
         </div>
+        
         <div class="card balance">
-          <p>Balance</p>
-          <h2>${{ formatMoney(balance) }}</h2>
+          <div class="card-header">
+            <p>Balance</p>
+            <div class="icon-bg"><span class="icon">=</span></div>
+          </div>
+          <h2>${{ formatMoney(currentMonthBalance) }}</h2>
         </div>
       </div>
 
-      <div class="chart-container">
-        <canvas id="myChart"></canvas>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Income & Expense (Last 6 Months)</h3>
+          <div class="canvas-container">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card doughnut-card">
+          <h3>Expenses by Category (This Month)</h3>
+          <div class="canvas-container">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
       </div>
 
       <div class="transactions">
-        <h3>Recent Transactions</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let t of transactions">
-              <td style="color: #64748b;">
-                {{ t.createdate ? (t.createdate | date:'shortDate') : '-' }}
-              </td>
-              <td style="font-weight: 500;">{{ t.name }}</td>
-              <td>{{ t.category }}</td>
-              
-              <td>
-                <span class="badge" [ngClass]="{ 'income': t.type === 'income', 'expense': t.type === 'expense' }">
-                  {{ t.type | titlecase }}
-                </span>
-              </td>
-              
-              <td class="amount" [ngClass]="{ 'income': t.type === 'income', 'expense': t.type === 'expense' }">
-                {{ t.type === 'income' ? '+' : '-' }}${{ formatMoney(t.amount) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-header">
+          <h3>Recent Transactions</h3>
+          <span class="view-all">Showing latest 5 entries</span>
+        </div>
+        
+        <ng-container *ngIf="recentTransactions.length > 0; else noData">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th class="align-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of recentTransactions">
+                <td class="text-muted">{{ t.createdate ? (t.createdate | date:'MMM d, yyyy') : '-' }}</td>
+                <td class="font-medium">{{ t.name }}</td>
+                <td><span class="category-pill">{{ t.category }}</span></td>
+                <td><span class="badge" [ngClass]="t.type">{{ t.type | titlecase }}</span></td>
+                <td class="amount align-right" [ngClass]="t.type">{{ t.type === 'income' ? '+' : '-' }}${{ formatMoney(t.amount) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+        <ng-template #noData>
+          <div class="empty-state">
+            <p>No transactions found. Start adding some!</p>
+          </div>
+        </ng-template>
       </div>
 
     </div>
   </div>
+
+  <div class="modal-overlay" *ngIf="isBudgetModalOpen" (click)="closeBudgetModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Set Monthly Budget</h3>
+        <button class="close-btn" (click)="closeBudgetModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>How much do you plan to spend this month?</p>
+        <div class="input-group">
+          <span class="currency-symbol">$</span>
+          <input type="number" [(ngModel)]="newBudgetAmount" min="0" placeholder="e.g. 10000" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeBudgetModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveBudget()">Save Budget</button>
+      </div>
+    </div>
+  </div>
+
 </div>

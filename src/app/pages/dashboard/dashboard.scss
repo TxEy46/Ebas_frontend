@@ -1,3 +1,4 @@
+/* ย้ายตัวแปรทั้งหมดมาไว้ด้านบนสุด เพื่อป้องกัน Error Undefined Variable */
 $app-bg: #f8fafc;
 $text-main: #0f172a;
 $text-muted: #64748b;
@@ -9,6 +10,8 @@ $blue-main: #3b82f6;
 $blue-bg: #eff6ff;
 $white: #ffffff;
 $border-color: #e2e8f0;
+$hover-bg: #f1f5f9;
+$orange-main: #f59e0b;
 
 .dashboard-layout {
   display: flex;
@@ -17,51 +20,75 @@ $border-color: #e2e8f0;
   background-color: $app-bg;
   color: $text-main;
 
-  /* Content area */
+  .sidebar {
+    flex-shrink: 0;
+  }
+
   .dashboard-content {
     flex: 1;
+    min-width: 0;
     padding: 2rem 3rem;
-    overflow-y: auto;
     max-width: 1400px;
     margin: 0 auto;
+    overflow-y: auto;
 
-    /* ตกแต่งคำว่า Dashboard ใหม่ */
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 2.5rem;
-      position: relative;
-      display: inline-block;
-      
-      /* ไล่สีตัวอักษรให้ดูมีมิติ */
-      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .header-section {
+      margin-bottom: 2rem;
 
-      /* ขีดเส้นใต้สั้นๆ เป็นลูกเล่นสีเขียว */
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 0;
-        width: 40px;
-        height: 4px;
-        background: $green-main; 
-        border-radius: 4px;
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 0 0 0.25rem 0;
+        position: relative;
+        display: inline-block;
+        background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 40px;
+          height: 4px;
+          background: $green-main;
+          border-radius: 4px;
+        }
+      }
+
+      .subtitle {
+        color: $text-muted;
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin: 0;
+        margin-top: 10px;
       }
     }
 
-    /* สถานะโหลดข้อมูล */
     .loading {
-      text-align: center;
-      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4rem;
       color: $text-muted;
       font-weight: 500;
-      font-size: 1.1rem;
-      background: $white;
-      border-radius: 24px;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid $border-color;
+        border-top-color: $blue-main;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-in;
     }
 
     /* Summary Cards */
@@ -73,87 +100,166 @@ $border-color: #e2e8f0;
 
       .card {
         background: $white;
-        border-radius: 24px;
-        padding: 1.8rem;
+        border-radius: 20px;
+        padding: 1.5rem;
         border: 1px solid $border-color;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         flex-direction: column;
         justify-content: center;
 
         &:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
 
-        p {
-          margin: 0 0 0.5rem 0;
-          font-weight: 600;
-          color: $text-muted;
-          font-size: 0.95rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+
+          p {
+            margin: 0;
+            font-weight: 600;
+            color: $text-muted;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+          }
+
+          .icon-bg {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+          }
         }
 
         h2 {
           margin: 0;
           font-size: 2rem;
           font-weight: 800;
-          letter-spacing: -1px;
+          letter-spacing: -0.5px;
         }
 
-        /* ขีดสีใต้ Card เพื่อเน้นสายตา */
-        &.income { 
-          h2 { color: $green-main; } 
+        &.income {
+          .icon-bg { background: $green-bg; color: $green-main; }
+          h2 { color: $green-main; }
           border-bottom: 4px solid $green-main;
         }
-        &.expense { 
-          h2 { color: $red-main; } 
+
+        &.expense {
+          .icon-bg { background: $red-bg; color: $red-main; }
+          h2 { color: $text-main; } 
           border-bottom: 4px solid $red-main;
+
+          /* 🔹 สไตล์สำหรับ Budget Section 🔹 */
+          .budget-section {
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            border-top: 1px dashed $border-color;
+
+            .budget-labels {
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.8rem;
+              color: $text-muted;
+              margin-bottom: 0.5rem;
+              font-weight: 600;
+            }
+
+            .progress-bar-bg {
+              width: 100%;
+              height: 8px;
+              background-color: $border-color;
+              border-radius: 10px;
+              overflow: hidden;
+            }
+
+            .progress-bar-fill {
+              height: 100%;
+              border-radius: 10px;
+              transition: width 0.5s ease-out, background-color 0.3s ease;
+            }
+
+            .budget-warning {
+              margin: 0.6rem 0 0 0;
+              font-size: 0.75rem;
+              color: $red-main;
+              font-weight: 600;
+              text-align: center;
+            }
+          }
         }
-        &.balance { 
-          h2 { color: $blue-main; } 
+
+        &.balance {
+          .icon-bg { background: $blue-bg; color: $blue-main; }
+          h2 { color: $blue-main; }
           border-bottom: 4px solid $blue-main;
         }
       }
     }
 
-    /* Chart Container */
-    .chart-container {
-      background: $white;
-      border-radius: 24px;
-      border: 1px solid $border-color;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-      padding: 2rem;
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
       margin-bottom: 2rem;
+
+      .chart-card {
+        background: $white;
+        border-radius: 20px;
+        border: 1px solid $border-color;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+
+        h3 {
+          margin: 0 0 1.5rem 0;
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: $text-main;
+        }
+
+        .canvas-container {
+          position: relative;
+          height: 280px;
+          width: 100%;
+        }
+      }
     }
 
     /* Transactions Table */
     .transactions {
       background: $white;
-      border-radius: 24px;
+      border-radius: 20px;
       border: 1px solid $border-color;
-      padding: 2rem;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
       overflow-x: auto;
 
-      h3 {
-        margin-top: 0;
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 1.5rem;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: $text-main;
+
+        h3 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+        .view-all { font-size: 0.85rem; color: $text-muted; font-weight: 500; }
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        color: $text-main;
         font-size: 0.95rem;
 
         th, td {
-          padding: 1rem 0.5rem;
+          padding: 1rem;
           text-align: left;
           border-bottom: 1px solid $border-color;
         }
@@ -167,13 +273,25 @@ $border-color: #e2e8f0;
           border-bottom: 2px solid $border-color;
         }
 
+        .align-right { text-align: right; }
+        .text-muted { color: $text-muted; }
+        .font-medium { font-weight: 600; color: $text-main; }
+
         tbody tr {
-          transition: background-color 0.2s ease;
-          &:hover { background-color: $app-bg; }
+          transition: background-color 0.2s;
+          &:hover { background-color: $hover-bg; }
           &:last-child td { border-bottom: none; }
         }
 
-        /* Badge for Type column */
+        .category-pill {
+          background: $app-bg;
+          padding: 4px 10px;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          color: $text-muted;
+          border: 1px solid $border-color;
+        }
+
         .badge {
           padding: 0.4rem 0.8rem;
           border-radius: 100px;
@@ -185,18 +303,32 @@ $border-color: #e2e8f0;
           &.expense { background: $red-bg; color: #991b1b; }
         }
 
-        /* Text colors for amount */
         td.amount {
           font-weight: 700;
           &.income { color: $green-main; }
-          &.expense { color: $red-main; }
+          &.expense { color: $text-main; }
         }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: $text-muted;
       }
     }
   }
 }
 
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 /* Responsive */
+@media(max-width: 1024px) {
+  .dashboard-layout .dashboard-content .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media(max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
@@ -204,9 +336,172 @@ $border-color: #e2e8f0;
     .dashboard-content {
       padding: 1.5rem;
       
-      h1 {
-        font-size: 1.8rem; /* ย่อขนาด h1 ลงบนมือถือ */
+      .header-section h1 {
+        font-size: 1.8rem;
+      }
+      
+      .transactions table {
+        min-width: 600px;
       }
     }
   }
+}
+
+/* -------------------------------------
+   🔹 Modal & Budget Edit Styles 🔹
+------------------------------------- */
+
+/* ปุ่มกดแก้ Budget */
+.budget-amount-clickable {
+  cursor: pointer;
+  color: $blue-main;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+  
+  &:hover { 
+    opacity: 0.7; 
+  }
+
+  .edit-icon { 
+    font-size: 0.9rem; 
+    margin-left: 4px; 
+  }
+}
+
+/* พื้นหลังสีดำเบลอๆ */
+.modal-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999; /* ให้อยู่บนสุดเสมอ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+
+  /* กล่อง Modal สีขาว */
+  .modal-content {
+    background: $white;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 420px;
+    padding: 2rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+
+      h3 { 
+        margin: 0; 
+        font-size: 1.25rem; 
+        font-weight: 700; 
+        color: $text-main; 
+      }
+      
+      .close-btn { 
+        background: none; 
+        border: none; 
+        font-size: 1.8rem; 
+        color: $text-muted; 
+        cursor: pointer; 
+        transition: color 0.2s;
+        line-height: 1;
+        padding: 0;
+
+        &:hover { color: $red-main; }
+      }
+    }
+
+    .modal-body {
+      margin-bottom: 2rem;
+
+      p { 
+        color: $text-muted; 
+        font-size: 0.95rem; 
+        margin: 0 0 1rem 0; 
+      }
+      
+      .input-group {
+        display: flex;
+        align-items: center;
+        background: $app-bg;
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        transition: border-color 0.2s;
+        
+        &:focus-within { border-color: $blue-main; }
+        
+        .currency-symbol { 
+          color: $text-muted; 
+          font-weight: 600; 
+          font-size: 1.2rem; 
+          margin-right: 0.5rem; 
+        }
+        
+        input {
+          border: none; 
+          background: transparent; 
+          outline: none; 
+          width: 100%;
+          font-size: 1.25rem; 
+          font-weight: 600; 
+          color: $text-main;
+          font-family: inherit;
+
+          &::placeholder { color: #cbd5e1; font-weight: 400; }
+          
+          /* ซ่อนลูกศรขึ้นลงของ Input Number */
+          &::-webkit-outer-spin-button,
+          &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+
+      .btn {
+        padding: 0.8rem 1.5rem; 
+        border-radius: 12px; 
+        font-weight: 600; 
+        font-size: 0.95rem;
+        cursor: pointer; 
+        transition: all 0.2s; 
+        border: none;
+
+        &.btn-secondary { 
+          background: $app-bg; 
+          color: $text-muted; 
+          &:hover { background: #e2e8f0; color: $text-main; } 
+        }
+
+        &.btn-primary { 
+          background: $blue-main; 
+          color: $white; 
+          box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+          &:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4); } 
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }

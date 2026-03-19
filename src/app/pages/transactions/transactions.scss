@@ -18,27 +18,20 @@ $hover-bg: #f1f5f9;
   display: flex;
   width: 100%;
   max-width: 100%;
-  /* ให้เต็มจอ แล้วไปควบคุมข้างในเอา */
 }
 
-/* 📌 แก้ไข: ปล่อยให้ Sidebar ยืดหดตามขนาดที่ตั้งไว้ในไฟล์ของมันเอง */
 .sidebar {
   flex-shrink: 0;
 }
 
-/* Content */
 .content {
   flex: 1;
-  /* 📌 เพิ่ม 2 บรรทัดนี้เพื่อให้ขยายตาม Sidebar ได้สมูท และไม่ทะลุกรอบ */
   min-width: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
   padding: 2rem 3rem;
-  /* 💡 ถ้าอยากให้ตารางกว้างเต็มจอ 100% ให้เปลี่ยนบรรทัดล่างเป็น max-width: 100%; นะครับ */
   max-width: 1400px;
   margin: 0 auto;
 
-  /* ส่วนหัวและ Filter */
   .header-section {
     display: flex;
     justify-content: space-between;
@@ -53,7 +46,6 @@ $hover-bg: #f1f5f9;
       margin: 0;
       position: relative;
       display: inline-block;
-
       background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -88,7 +80,6 @@ $hover-bg: #f1f5f9;
 
         select {
           appearance: none;
-          /* ซ่อนลูกศรเดิมของเบราว์เซอร์ */
           padding: 0.6rem 2.5rem 0.6rem 1.2rem;
           border-radius: 12px;
           border: 1px solid $border-color;
@@ -115,20 +106,17 @@ $hover-bg: #f1f5f9;
           transform: translateY(-50%);
           color: $text-muted;
           pointer-events: none;
-          /* ให้คลิกทะลุไปโดน select */
         }
       }
     }
   }
 
-  /* ตารางใน Card */
   .table-container {
     background: $white;
     border-radius: 24px;
     border: 1px solid $border-color;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    /* ให้มุมมนครอบตาราง */
   }
 
   .transactions-table {
@@ -143,9 +131,12 @@ $hover-bg: #f1f5f9;
       border-bottom: 1px solid $border-color;
     }
 
-    /* จัดชิดขวาสำหรับคอลัมน์ตัวเลขและวันที่ */
     .align-right {
       text-align: right;
+    }
+    
+    .align-center {
+      text-align: center;
     }
 
     th {
@@ -167,7 +158,6 @@ $hover-bg: #f1f5f9;
 
       &:last-child td {
         border-bottom: none;
-        /* เอาเส้นขอบล่างของแถวสุดท้ายออก */
       }
     }
 
@@ -205,7 +195,6 @@ $hover-bg: #f1f5f9;
     }
   }
 
-  /* สถานะโหลดข้อมูล / ว่างเปล่า */
   .state-message {
     padding: 4rem 2rem;
     display: flex;
@@ -240,7 +229,6 @@ $hover-bg: #f1f5f9;
     }
   }
 
-  /* Responsive */
   @media (max-width: 768px) {
     .layout {
       flex-direction: column;
@@ -260,18 +248,15 @@ $hover-bg: #f1f5f9;
 
       .table-container {
         overflow-x: auto;
-        /* ให้เลื่อนตารางซ้ายขวาได้บนมือถือ */
       }
 
       .transactions-table {
         min-width: 600px;
-        /* บังคับความกว้างตารางไม่ให้บีบเละ */
       }
     }
   }
 }
 
-/* สไตล์พื้นฐานสำหรับปุ่มไอคอน */
 .btn-icon {
   background: transparent;
   border: none;
@@ -282,41 +267,33 @@ $hover-bg: #f1f5f9;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s, color 0.2s;
-  color: #71717a; // สีเทาพื้นฐาน
+  color: #71717a;
 
   &:hover {
-    background-color: #f4f4f5; // พื้นหลังเทาอ่อนเมื่อ hover
+    background-color: #f4f4f5;
   }
 
   svg {
-    display: block; // ป้องกันปัญหาระดับบรรทัด
+    display: block;
   }
 }
 
-/* สีเฉพาะสำหรับปุ่มแก้ไข */
 .btn-edit:hover {
-  color: #2563eb; // สีฟ้าเมื่อ hover
+  color: #2563eb;
   background-color: #dbeafe;
 }
 
-/* สีเฉพาะสำหรับปุ่มลบ */
 .btn-delete:hover {
-  color: #dc2626; // สีแดงเมื่อ hover
+  color: #dc2626;
   background-color: #fee2e2;
 }
 
-/* จัดวางคอลัมน์ปุ่ม */
 .action-col {
   display: flex;
-  gap: 4px; // เว้นระยะห่างระหว่างปุ่ม
+  gap: 4px;
   justify-content: center;
 }
 
-/* =========================================
-   สไตล์สำหรับ Modal (หน้าต่างลอยแก้ไขข้อมูล)
-   ========================================= */
-
-/* ทำให้พื้นหลังสีดำโปร่งแสง คลุมเต็มหน้าจอ และล็อคให้อยู่บนสุด */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -324,22 +301,18 @@ $hover-bg: #f1f5f9;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  /* สีดำโปร่งแสง 50% */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  /* บังคับให้ลอยอยู่บนสุดของหน้าเว็บ */
 }
 
-/* กล่องหน้าต่างสีขาวตรงกลาง */
 .modal-content {
   background-color: white;
   padding: 24px 32px;
   border-radius: 12px;
   width: 100%;
   max-width: 420px;
-  /* ขนาดความกว้างสูงสุดของหน้าต่าง */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 
   h2 {
@@ -351,7 +324,6 @@ $hover-bg: #f1f5f9;
   }
 }
 
-/* การจัดวางฟอร์มแต่ละช่อง */
 .form-group {
   margin-bottom: 16px;
 
@@ -371,19 +343,16 @@ $hover-bg: #f1f5f9;
     border-radius: 6px;
     font-size: 1rem;
     box-sizing: border-box;
-    /* ป้องกันไม่ให้ input ทะลุกรอบ */
     transition: border-color 0.2s;
 
     &:focus {
       outline: none;
       border-color: #3b82f6;
-      /* สีฟ้าตอนกดพิมพ์ */
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
   }
 }
 
-/* ปุ่ม ยกเลิก และ บันทึก */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -419,13 +388,9 @@ $hover-bg: #f1f5f9;
   }
 }
 
-/* =========================================
-   สไตล์สำหรับ Pagination (การแบ่งหน้า)
-   ========================================= */
 .pagination {
   display: flex;
   justify-content: flex-end;
-  /* จัดปุ่มไปทางขวา */
   align-items: center;
   gap: 16px;
   margin-top: 24px;
