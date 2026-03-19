@@ -1,3 +1,4 @@
+// Variables
 $text-main: #0f172a;
 $text-muted: #64748b;
 $green-main: #10b981;
@@ -6,26 +7,23 @@ $red-main: #ef4444;
 $white: #ffffff;
 $border-color: #e2e8f0;
 
-.login-page {
+.auth-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* พื้นหลัง Gradient อ่อนๆ */
   background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
   font-family: 'Inter', -apple-system, sans-serif;
   padding: 1rem;
 }
 
-.login-card {
+.auth-card {
   background-color: $white;
-  padding: 2.5rem 2.5rem;
+  padding: 2.5rem;
   border-radius: 24px;
   width: 100%;
   max-width: 420px;
-  /* เงาแบบพรีเมียม */
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02);
-  /* แอนิเมชันเลื่อนขึ้นมาตอนโหลดหน้า */
   animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -34,7 +32,6 @@ $border-color: #e2e8f0;
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* โลโก้ด้านบน */
 .logo-container {
   display: flex;
   align-items: center;
@@ -52,28 +49,27 @@ $border-color: #e2e8f0;
   }
 }
 
-.login-title {
+.auth-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: $text-main;
   text-align: center;
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 0.5rem;
 }
 
-.login-subtitle {
+.auth-subtitle {
   text-align: center;
   color: $text-muted;
   font-size: 0.95rem;
   margin-bottom: 2rem;
 }
 
-.login-form {
+.auth-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-/* กล่อง Input พร้อมไอคอน */
 .input-group {
   position: relative;
   display: flex;
@@ -86,12 +82,12 @@ $border-color: #e2e8f0;
     height: 20px;
     color: #94a3b8;
     transition: color 0.2s ease;
-    pointer-events: none; /* ให้คลิกทะลุไปโดน input ได้ */
+    pointer-events: none;
   }
 
-  .login-input {
+  .auth-input {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 3rem; /* เว้นที่ด้านซ้ายให้ไอคอน */
+    padding: 0.85rem 1rem 0.85rem 3rem;
     border-radius: 14px;
     border: 1px solid $border-color;
     font-size: 0.95rem;
@@ -100,10 +96,6 @@ $border-color: #e2e8f0;
     outline: none;
     transition: all 0.2s ease;
 
-    &::placeholder {
-      color: #94a3b8;
-    }
-
     &:focus {
       background-color: $white;
       border-color: $green-main;
@@ -111,44 +103,46 @@ $border-color: #e2e8f0;
     }
   }
 
-  /* เวลาพิมพ์หรือคลิกในกล่อง ให้ไอคอนเปลี่ยนเป็นสีเขียว */
   &:focus-within .input-icon {
     color: $green-main;
   }
 }
 
-/* กล่องแจ้งเตือน Error */
-.error-message {
+/* Alert Messages */
+.error-message, .success-message {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.8rem 1rem;
-  background-color: #fef2f2;
   border-radius: 12px;
-  color: $red-main;
   font-size: 0.9rem;
   font-weight: 500;
   animation: slideUpFade 0.3s ease;
   
-  svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
+  svg { width: 18px; height: 18px; flex-shrink: 0; }
 }
 
-/* ปุ่ม Login */
-.login-button {
+.error-message {
+  background-color: #fef2f2;
+  color: $red-main;
+}
+
+.success-message {
+  background-color: #ecfdf5;
+  color: $green-main;
+}
+
+/* Submit Button */
+.auth-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
+  min-height: 52px;
   background-color: $green-main;
   color: white;
   font-weight: 600;
-  font-size: 1rem;
-  padding: 0.9rem;
   border-radius: 14px;
   border: none;
   cursor: pointer;
@@ -158,21 +152,14 @@ $border-color: #e2e8f0;
 
   &:hover:not(:disabled) {
     background-color: $green-hover;
-    transform: translateY(-2px); /* ลอยขึ้นนิดนึงเวลาเอาเมาส์ชี้ */
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(-2px);
   }
 
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
-    box-shadow: none;
   }
 
-  /* ไอคอนหมุนตอนโหลด */
   .spinner {
     width: 18px;
     height: 18px;
@@ -183,37 +170,19 @@ $border-color: #e2e8f0;
   }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* เพิ่มต่อท้ายไฟล์ login.scss */
-.register-hint {
+.login-hint {
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: $text-muted;
 
-  .register-link {
+  .login-link {
     color: $green-main;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
-    transition: color 0.2s;
-
-    &:hover {
-      color: $green-hover;
-      text-decoration: underline;
-    }
-  }
-}
-
-/* ปรับปรุง Spinner ให้ขนาดนิ่งขึ้น */
-.login-button {
-  min-height: 52px; /* ล็อคความสูงปุ่มไม่ให้ดิ้นตอน Loading */
-  
-  .spinner {
-    margin-right: 8px;
-    flex-shrink: 0;
+    &:hover { text-decoration: underline; color: $green-hover; }
   }
 }

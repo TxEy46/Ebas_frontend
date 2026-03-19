@@ -76,7 +76,7 @@ $orange-main: #f59e0b;
       padding: 4rem;
       color: $text-muted;
       font-weight: 500;
-      
+
       .spinner {
         width: 32px;
         height: 32px;
@@ -103,7 +103,7 @@ $orange-main: #f59e0b;
         border-radius: 20px;
         padding: 1.5rem;
         border: 1px solid $border-color;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         flex-direction: column;
@@ -111,7 +111,7 @@ $orange-main: #f59e0b;
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
         .card-header {
@@ -148,14 +148,28 @@ $orange-main: #f59e0b;
         }
 
         &.income {
-          .icon-bg { background: $green-bg; color: $green-main; }
-          h2 { color: $green-main; }
+          .icon-bg {
+            background: $green-bg;
+            color: $green-main;
+          }
+
+          h2 {
+            color: $green-main;
+          }
+
           border-bottom: 4px solid $green-main;
         }
 
         &.expense {
-          .icon-bg { background: $red-bg; color: $red-main; }
-          h2 { color: $text-main; } 
+          .icon-bg {
+            background: $red-bg;
+            color: $red-main;
+          }
+
+          h2 {
+            color: $text-main;
+          }
+
           border-bottom: 4px solid $red-main;
 
           /* 🔹 สไตล์สำหรับ Budget Section 🔹 */
@@ -198,8 +212,15 @@ $orange-main: #f59e0b;
         }
 
         &.balance {
-          .icon-bg { background: $blue-bg; color: $blue-main; }
-          h2 { color: $blue-main; }
+          .icon-bg {
+            background: $blue-bg;
+            color: $blue-main;
+          }
+
+          h2 {
+            color: $blue-main;
+          }
+
           border-bottom: 4px solid $blue-main;
         }
       }
@@ -217,7 +238,7 @@ $orange-main: #f59e0b;
         border-radius: 20px;
         border: 1px solid $border-color;
         padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
 
         h3 {
           margin: 0 0 1.5rem 0;
@@ -240,17 +261,60 @@ $orange-main: #f59e0b;
       border-radius: 20px;
       border: 1px solid $border-color;
       padding: 1.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
       overflow-x: auto;
 
+      /* -------------------------------------
+   🔹 View All Button Styling 🔹
+------------------------------------- */
       .table-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
 
-        h3 { margin: 0; font-size: 1.25rem; font-weight: 700; }
-        .view-all { font-size: 0.85rem; color: $text-muted; font-weight: 500; }
+        h3 {
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: $text-main;
+        }
+
+        .btn-view-all {
+          background: $white;
+          color: $blue-main;
+          border: 1px solid $blue-main;
+          padding: 0.5rem 1rem;
+          border-radius: 10px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none; // กรณีใช้ routerLink (<a> tag)
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s ease;
+
+          // เพิ่มลูกศรเล็กน้อยให้ดูเป็นปุ่มนำทาง
+          &::after {
+            content: '→';
+            transition: transform 0.2s ease;
+          }
+
+          &:hover {
+            background: $blue-bg; // ใช้ตัวแปรสีฟ้าอ่อนที่คุณมี
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
+
+            &::after {
+              transform: translateX(3px); // ลูกศรขยับเมื่อ Hover
+            }
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
       }
 
       table {
@@ -258,7 +322,8 @@ $orange-main: #f59e0b;
         border-collapse: collapse;
         font-size: 0.95rem;
 
-        th, td {
+        th,
+        td {
           padding: 1rem;
           text-align: left;
           border-bottom: 1px solid $border-color;
@@ -273,14 +338,29 @@ $orange-main: #f59e0b;
           border-bottom: 2px solid $border-color;
         }
 
-        .align-right { text-align: right; }
-        .text-muted { color: $text-muted; }
-        .font-medium { font-weight: 600; color: $text-main; }
+        .align-right {
+          text-align: right;
+        }
+
+        .text-muted {
+          color: $text-muted;
+        }
+
+        .font-medium {
+          font-weight: 600;
+          color: $text-main;
+        }
 
         tbody tr {
           transition: background-color 0.2s;
-          &:hover { background-color: $hover-bg; }
-          &:last-child td { border-bottom: none; }
+
+          &:hover {
+            background-color: $hover-bg;
+          }
+
+          &:last-child td {
+            border-bottom: none;
+          }
         }
 
         .category-pill {
@@ -299,14 +379,27 @@ $orange-main: #f59e0b;
           font-size: 0.8rem;
           display: inline-block;
 
-          &.income { background: $green-bg; color: #065f46; }
-          &.expense { background: $red-bg; color: #991b1b; }
+          &.income {
+            background: $green-bg;
+            color: #065f46;
+          }
+
+          &.expense {
+            background: $red-bg;
+            color: #991b1b;
+          }
         }
 
         td.amount {
           font-weight: 700;
-          &.income { color: $green-main; }
-          &.expense { color: $text-main; }
+
+          &.income {
+            color: $green-main;
+          }
+
+          &.expense {
+            color: $text-main;
+          }
         }
       }
 
@@ -319,8 +412,23 @@ $orange-main: #f59e0b;
   }
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* Responsive */
 @media(max-width: 1024px) {
@@ -335,11 +443,11 @@ $orange-main: #f59e0b;
 
     .dashboard-content {
       padding: 1.5rem;
-      
+
       .header-section h1 {
         font-size: 1.8rem;
       }
-      
+
       .transactions table {
         min-width: 600px;
       }
@@ -358,27 +466,28 @@ $orange-main: #f59e0b;
   display: inline-flex;
   align-items: center;
   transition: opacity 0.2s ease;
-  
-  &:hover { 
-    opacity: 0.7; 
+
+  &:hover {
+    opacity: 0.7;
   }
 
-  .edit-icon { 
-    font-size: 0.9rem; 
-    margin-left: 4px; 
+  .edit-icon {
+    font-size: 0.9rem;
+    margin-left: 4px;
   }
 }
 
 /* พื้นหลังสีดำเบลอๆ */
 .modal-overlay {
   position: fixed;
-  top: 0; 
-  left: 0; 
-  right: 0; 
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   background: rgba(15, 23, 42, 0.5);
   backdrop-filter: blur(4px);
-  z-index: 9999; /* ให้อยู่บนสุดเสมอ */
+  z-index: 9999;
+  /* ให้อยู่บนสุดเสมอ */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -400,36 +509,38 @@ $orange-main: #f59e0b;
       align-items: center;
       margin-bottom: 1.5rem;
 
-      h3 { 
-        margin: 0; 
-        font-size: 1.25rem; 
-        font-weight: 700; 
-        color: $text-main; 
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $text-main;
       }
-      
-      .close-btn { 
-        background: none; 
-        border: none; 
-        font-size: 1.8rem; 
-        color: $text-muted; 
-        cursor: pointer; 
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: $text-muted;
+        cursor: pointer;
         transition: color 0.2s;
         line-height: 1;
         padding: 0;
 
-        &:hover { color: $red-main; }
+        &:hover {
+          color: $red-main;
+        }
       }
     }
 
     .modal-body {
       margin-bottom: 2rem;
 
-      p { 
-        color: $text-muted; 
-        font-size: 0.95rem; 
-        margin: 0 0 1rem 0; 
+      p {
+        color: $text-muted;
+        font-size: 0.95rem;
+        margin: 0 0 1rem 0;
       }
-      
+
       .input-group {
         display: flex;
         align-items: center;
@@ -438,28 +549,33 @@ $orange-main: #f59e0b;
         border-radius: 12px;
         padding: 0.8rem 1rem;
         transition: border-color 0.2s;
-        
-        &:focus-within { border-color: $blue-main; }
-        
-        .currency-symbol { 
-          color: $text-muted; 
-          font-weight: 600; 
-          font-size: 1.2rem; 
-          margin-right: 0.5rem; 
+
+        &:focus-within {
+          border-color: $blue-main;
         }
-        
+
+        .currency-symbol {
+          color: $text-muted;
+          font-weight: 600;
+          font-size: 1.2rem;
+          margin-right: 0.5rem;
+        }
+
         input {
-          border: none; 
-          background: transparent; 
-          outline: none; 
+          border: none;
+          background: transparent;
+          outline: none;
           width: 100%;
-          font-size: 1.25rem; 
-          font-weight: 600; 
+          font-size: 1.25rem;
+          font-weight: 600;
           color: $text-main;
           font-family: inherit;
 
-          &::placeholder { color: #cbd5e1; font-weight: 400; }
-          
+          &::placeholder {
+            color: #cbd5e1;
+            font-weight: 400;
+          }
+
           /* ซ่อนลูกศรขึ้นลงของ Input Number */
           &::-webkit-outer-spin-button,
           &::-webkit-inner-spin-button {
@@ -476,25 +592,34 @@ $orange-main: #f59e0b;
       gap: 1rem;
 
       .btn {
-        padding: 0.8rem 1.5rem; 
-        border-radius: 12px; 
-        font-weight: 600; 
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
         font-size: 0.95rem;
-        cursor: pointer; 
-        transition: all 0.2s; 
+        cursor: pointer;
+        transition: all 0.2s;
         border: none;
 
-        &.btn-secondary { 
-          background: $app-bg; 
-          color: $text-muted; 
-          &:hover { background: #e2e8f0; color: $text-main; } 
+        &.btn-secondary {
+          background: $app-bg;
+          color: $text-muted;
+
+          &:hover {
+            background: #e2e8f0;
+            color: $text-main;
+          }
         }
 
-        &.btn-primary { 
-          background: $blue-main; 
-          color: $white; 
+        &.btn-primary {
+          background: $blue-main;
+          color: $white;
           box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
-          &:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4); } 
+
+          &:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+          }
         }
       }
     }
@@ -502,6 +627,94 @@ $orange-main: #f59e0b;
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.category-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0; // กันจุดสีเบี้ยว
+  }
+
+  .category-name {
+    font-size: 0.9rem;
+    color: #475569;
+    font-weight: 500;
+  }
+}
+
+/* ปรับปรุง CSS ของ table เล็กน้อยเพื่อให้ดูสะอาดตา */
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid #f1f5f9;
+    color: #64748b;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+}
+
+.set-budget-prompt {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  background: #ffffff;      // พื้นหลังขาวสะอาด
+  border: 1px solid #e2e8f0; // ขอบเส้นบางๆ สีเทาอ่อน (Slate 200)
+  border-radius: 12px;      // ความมนกำลังดี ไม่กลมเกินไป
+  margin: 16px 0;
+
+  .btn-setup-budget {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #f8fafc;    // ตัวปุ่มสีเทาจางมาก
+    color: #475569;         // ตัวอักษรสีเทาเข้ม ดูเป็นมืออาชีพ
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .icon {
+      color: #10b981;       // ใช้สีเขียวแค่ที่ Icon เพื่อเป็นจุดนำสายตา
+    }
+
+    &:hover {
+      background: #ffffff;
+      color: #10b981;       // เปลี่ยนเป็นสีเขียวเฉพาะตอน Hover
+      border-color: #10b981;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
 }

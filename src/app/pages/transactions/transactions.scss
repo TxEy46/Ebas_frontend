@@ -134,7 +134,7 @@ $hover-bg: #f1f5f9;
     .align-right {
       text-align: right;
     }
-    
+
     .align-center {
       text-align: center;
     }
@@ -322,6 +322,39 @@ $hover-bg: #f1f5f9;
     color: #1f2937;
     text-align: center;
   }
+
+  // 🔹 เพิ่มสไตล์ Dropdown ใน Modal
+  .select-wrapper {
+    position: relative;
+    width: 100%;
+
+    select {
+      appearance: none;
+      width: 100%;
+      padding: 10px 12px;
+      padding-right: 35px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      background: white;
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    }
+
+    .chevron {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      pointer-events: none;
+    }
+  }
 }
 
 .form-group {
@@ -424,4 +457,55 @@ $hover-bg: #f1f5f9;
     color: #6b7280;
     font-weight: 500;
   }
+}
+
+.category-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .category-name {
+    font-size: 0.9rem;
+    color: #475569;
+  }
+}
+
+.input-with-indicator {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .current-color-dot {
+    position: absolute;
+    left: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  input {
+    padding-left: 35px !important; // เว้นที่ให้จุดสี
+    width: 100%;
+  }
+}
+
+.help-text {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }

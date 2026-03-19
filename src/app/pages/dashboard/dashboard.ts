@@ -1,149 +1,177 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 🔹 นำเข้า FormsModule สำหรับใช้งาน Input
+import { FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js/auto';
 import { SidebarComponent } from '../../component/sidebar/sidebar';
+import { RouterModule, Router } from '@angular/router';
 
 interface Transaction {
   id: string | number;
   name: string;
-  createdate?: Date | string;
-  category: string;
+  createdate?: Date;
+  category_id?: string;
   amount: number;
   type: 'income' | 'expense';
+  categories?: {
+    name: string;
+    color: string;
+  };
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule], // 🔹 เพิ่ม FormsModule ที่นี่
+  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule, RouterModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  // --- Data Properties ---
   transactions: Transaction[] = [];
   recentTransactions: Transaction[] = [];
   loading = true;
+  userData: any = null; // เก็บข้อมูลผู้ใช้ที่ Login
 
+  // --- Summary Properties ---
   currentMonthIncome = 0;
   currentMonthExpense = 0;
   currentMonthBalance = 0;
 
-  // ตัวแปรงบประมาณ (Budget)
-  budgetAmount = 10000;
+  // --- Budget Properties ---
+  budgetAmount = 0;
   budgetUsedPercent = 0;
   budgetStatusColor = '#10b981';
-
-  // 🔹 ตัวแปรสำหรับคุม Modal ตั้งงบประมาณ
   isBudgetModalOpen = false;
   newBudgetAmount = 0;
 
-  barChartData: { name: string, income: number, expense: number }[] = [];
+  // --- Charts ---
   barChart: Chart | undefined;
   doughnutChart: Chart | undefined;
+  barChartData: { name: string, income: number, expense: number }[] = [];
 
-  serverUrl = 'https://ebas-backend.onrender.com'; // เปลี่ยนเป็น URL ของ Backend จริง
+  readonly serverUrl = 'https://ebas-backend.onrender.com';
 
-  constructor(private http: HttpClient, private cd: ChangeDetectorRef) { }
+  constructor(
+    private http: HttpClient, 
+    private cd: ChangeDetectorRef,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    this.fetchTransactions();
-    this.fetchBudget();
+    // 1. ตรวจสอบการ Login จาก localStorage
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.userData = JSON.parse(savedUser);
+      this.fetchData();
+    } else {
+      // ถ้าไม่มี User ให้เด้งกลับหน้า Login
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnDestroy() {
-    if (this.barChart) this.barChart.destroy();
-    if (this.doughnutChart) this.doughnutChart.destroy();
+    this.barChart?.destroy();
+    this.doughnutChart?.destroy();
   }
 
-  // 🔹 ฟังก์ชันใหม่: ดึงข้อมูลงบประมาณจาก API
+  private fetchData() {
+    this.loading = true;
+    this.fetchBudget();
+    this.fetchTransactions();
+  }
+
+  // 📋 ดึงข้อมูลงบประมาณ (ระบุรายเดือน และ userId)
   fetchBudget() {
+    if (!this.userData?.id) return;
+
     const today = new Date();
-    // สร้างรูปแบบ YYYY-MM เช่น '2026-03'
     const monthYear = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
-    this.http.get<any>(`${this.serverUrl}/api/budgets/${monthYear}`)
-      .subscribe({
-        next: (res) => {
-          this.budgetAmount = res.amount; // เอาค่าที่ได้จาก Backend มาใส่
-          this.calculateBudgetProgress(); // คำนวณเปอร์เซ็นต์หลอดสีใหม่
-          this.cd.detectChanges();
-        },
-        error: (err) => console.error('Error fetching budget:', err)
-      });
+    // ส่ง userId ผ่าน Query String
+    this.http.get<any>(`${this.serverUrl}/api/budgets/${monthYear}?userId=${this.userData.id}`).subscribe({
+      next: (res) => {
+        this.budgetAmount = res?.amount || 0;
+        this.calculateBudgetProgress();
+        this.cd.detectChanges();
+      },
+      error: (err) => console.error('Budget error:', err)
+    });
   }
 
+  // 📋 ดึงรายการธุรกรรม (ระบุ userId)
   fetchTransactions() {
-    this.http.get<Transaction[]>(`${this.serverUrl}/api/transactions`)
-      .subscribe({
-        next: (res) => {
-          this.transactions = res.map(t => ({
-            ...t,
-            createdate: t.createdate ? new Date(t.createdate) : undefined
-          })).sort((a, b) => {
-            const dateA = a.createdate ? new Date(a.createdate).getTime() : 0;
-            const dateB = b.createdate ? new Date(b.createdate).getTime() : 0;
-            return dateB - dateA;
-          });
+    if (!this.userData?.id) return;
 
-          this.recentTransactions = this.transactions.slice(0, 5);
+    // ส่ง userId ผ่าน Query String
+    this.http.get<any[]>(`${this.serverUrl}/api/transactions?userId=${this.userData.id}`).subscribe({
+      next: (res) => {
+        this.transactions = res.map(t => ({
+          ...t,
+          createdate: t.createdate ? new Date(t.createdate) : undefined,
+          categories: {
+            name: t.categories?.name || 'อื่นๆ',
+            color: t.categories?.color || '#cbd5e1'
+          }
+        })).sort((a, b) => (b.createdate?.getTime() || 0) - (a.createdate?.getTime() || 0));
 
-          this.calculateCurrentMonthSummary();
-          this.calculateBudgetProgress();
-          this.prepareBarChartData();
-
-          this.loading = false;
-          this.cd.detectChanges();
-
-          this.createBarChart();
-          this.createDoughnutChart();
-        },
-        error: (err) => {
-          console.error('Error fetching transactions:', err);
-          this.loading = false;
-        }
-      });
+        this.recentTransactions = this.transactions.slice(0, 5);
+        this.updateDashboard();
+      },
+      error: (err) => {
+        console.error('Transaction error:', err);
+        this.loading = false;
+      }
+    });
   }
+
+  private updateDashboard() {
+    this.calculateCurrentMonthSummary();
+    this.calculateBudgetProgress();
+    this.prepareBarChartData();
+
+    this.loading = false;
+    this.cd.detectChanges();
+
+    // Render กราฟหลังจากข้อมูลพร้อม
+    setTimeout(() => {
+      this.createBarChart();
+      this.createDoughnutChart();
+    }, 100);
+  }
+
+  // --- Logic Calculations ---
 
   calculateCurrentMonthSummary() {
     const today = new Date();
-    const currentMonthTx = this.transactions.filter(t => {
-      if (!t.createdate) return false;
-      const d = new Date(t.createdate);
-      return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-    });
+    const currentTx = this.transactions.filter(t =>
+      t.createdate &&
+      t.createdate.getMonth() === today.getMonth() &&
+      t.createdate.getFullYear() === today.getFullYear()
+    );
 
-    this.currentMonthIncome = currentMonthTx
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    this.currentMonthExpense = currentMonthTx
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
-
+    this.currentMonthIncome = currentTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    this.currentMonthExpense = currentTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     this.currentMonthBalance = this.currentMonthIncome - this.currentMonthExpense;
   }
 
   calculateBudgetProgress() {
-    if (this.budgetAmount === 0) {
+    if (this.budgetAmount <= 0) {
       this.budgetUsedPercent = 0;
+      this.budgetStatusColor = '#10b981';
       return;
     }
     this.budgetUsedPercent = (this.currentMonthExpense / this.budgetAmount) * 100;
 
-    if (this.budgetUsedPercent >= 100) {
-      this.budgetStatusColor = '#ef4444'; // แดง
-    } else if (this.budgetUsedPercent >= 75) {
-      this.budgetStatusColor = '#f59e0b'; // ส้ม
-    } else {
-      this.budgetStatusColor = '#10b981'; // เขียว
-    }
+    if (this.budgetUsedPercent >= 100) this.budgetStatusColor = '#ef4444';
+    else if (this.budgetUsedPercent >= 75) this.budgetStatusColor = '#f59e0b';
+    else this.budgetStatusColor = '#10b981';
   }
 
-  // 🔹 ฟังก์ชันสำหรับเปิด-ปิด และบันทึก Modal
+  // --- Modal Actions ---
+
   openBudgetModal() {
-    this.newBudgetAmount = this.budgetAmount; // ดึงค่าเดิมมาแสดงในช่องกรอก
+    this.newBudgetAmount = this.budgetAmount;
     this.isBudgetModalOpen = true;
   }
 
@@ -151,98 +179,120 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isBudgetModalOpen = false;
   }
 
-  // 🔹 อัปเดตฟังก์ชันนี้ เพื่อส่งข้อมูลไปเซฟที่ Backend
   saveBudget() {
-    if (this.newBudgetAmount >= 0) {
-      const today = new Date();
-      const monthYear = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    if (this.newBudgetAmount < 0 || !this.userData?.id) return;
 
-      const payload = {
-        month_year: monthYear,
-        amount: this.newBudgetAmount
-      };
+    const today = new Date();
+    const monthYear = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    
+    // ส่งข้อมูลไปบันทึกพร้อม user_id
+    const payload = { 
+      month_year: monthYear, 
+      amount: this.newBudgetAmount,
+      user_id: this.userData.id 
+    };
 
-      // ยิง API ไปบันทึกข้อมูล
-      this.http.post(`${this.serverUrl}/api/budgets`, payload)
-        .subscribe({
-          next: (res: any) => {
-            console.log('Budget saved:', res);
-            this.budgetAmount = this.newBudgetAmount; 
-            this.calculateBudgetProgress(); 
-            this.closeBudgetModal(); // สั่งปิด Popup
-            
-            // 🌟 เพิ่มบรรทัดนี้ครับ! เป็นการปลุก Angular ให้รีเฟรชหน้าจอทันที
-            this.cd.detectChanges(); 
-          },
-          error: (err) => {
-            console.error('Error saving budget:', err);
-            alert('Failed to save budget. Please try again.');
-          }
-        });
-    }
+    this.http.post(`${this.serverUrl}/api/budgets`, payload).subscribe({
+      next: () => {
+        this.budgetAmount = this.newBudgetAmount;
+        this.calculateBudgetProgress();
+        this.closeBudgetModal();
+        this.cd.detectChanges();
+      },
+      error: (err) => alert('ไม่สามารถบันทึกงบประมาณได้')
+    });
   }
 
-  // (ฟังก์ชันกราฟเดิม ย่อไว้เพื่อความกระชับ)
-  prepareBarChartData() { /* โค้ดเดิม */
+  // --- Chart Preparation ---
+
+  prepareBarChartData() {
     const map = new Map<string, { name: string, income: number, expense: number }>();
     const today = new Date();
+
     for (let i = 5; i >= 0; i--) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
-      map.set(key, { name: d.toLocaleString('default', { month: 'short' }), income: 0, expense: 0 });
+      map.set(key, { name: d.toLocaleString('th-TH', { month: 'short' }), income: 0, expense: 0 });
     }
+
     this.transactions.forEach(t => {
       if (!t.createdate) return;
-      const d = new Date(t.createdate);
-      const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
+      const key = `${t.createdate.getFullYear()}-${t.createdate.getMonth() + 1}`;
       if (map.has(key)) {
-        const current = map.get(key)!;
-        if (t.type === 'income') current.income += t.amount;
-        else if (t.type === 'expense') current.expense += t.amount;
+        const item = map.get(key)!;
+        t.type === 'income' ? item.income += t.amount : item.expense += t.amount;
       }
     });
     this.barChartData = Array.from(map.values());
   }
 
-  createBarChart() { /* โค้ดเดิม */
+  createBarChart() {
     const ctx = document.getElementById('barChart') as HTMLCanvasElement;
     if (!ctx) return;
-    if (this.barChart) this.barChart.destroy();
+    this.barChart?.destroy();
     this.barChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: this.barChartData.map(d => d.name),
         datasets: [
-          { label: 'Income', data: this.barChartData.map(d => d.income), backgroundColor: '#10b981', borderRadius: 4 },
-          { label: 'Expense', data: this.barChartData.map(d => d.expense), backgroundColor: '#ef4444', borderRadius: 4 }
+          { label: 'รายรับ', data: this.barChartData.map(d => d.income), backgroundColor: '#10b981', borderRadius: 4 },
+          { label: 'รายจ่าย', data: this.barChartData.map(d => d.expense), backgroundColor: '#ef4444', borderRadius: 4 }
         ]
       },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+      options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
-  createDoughnutChart() { /* โค้ดเดิม */
+  createDoughnutChart() {
     const ctx = document.getElementById('doughnutChart') as HTMLCanvasElement;
     if (!ctx) return;
-    if (this.doughnutChart) this.doughnutChart.destroy();
+    this.doughnutChart?.destroy();
+
     const today = new Date();
-    const expensesThisMonth = this.transactions.filter(t => t.type === 'expense' && t.createdate && new Date(t.createdate).getMonth() === today.getMonth() && new Date(t.createdate).getFullYear() === today.getFullYear());
-    const categoryTotals: { [key: string]: number } = {};
-    expensesThisMonth.forEach(t => { categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount; });
-    const labels = Object.keys(categoryTotals);
-    const data = Object.values(categoryTotals);
-    const colors = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#14b8a6'];
+    const monthlyExpenses = this.transactions.filter(t =>
+      t.type === 'expense' &&
+      t.createdate &&
+      t.createdate.getMonth() === today.getMonth() &&
+      t.createdate.getFullYear() === today.getFullYear()
+    );
+
+    const categoryMap = new Map<string, { total: number, color: string }>();
+
+    monthlyExpenses.forEach(t => {
+      const name = t.categories?.name || 'อื่นๆ';
+      const color = t.categories?.color || '#cbd5e1';
+      categoryMap.set(name, {
+        total: (categoryMap.get(name)?.total || 0) + t.amount,
+        color: color
+      });
+    });
+
+    const sortedData = Array.from(categoryMap.entries()).sort((a, b) => {
+      if (a[0] === 'อื่นๆ') return 1;
+      if (b[0] === 'อื่นๆ') return -1;
+      return a[0].localeCompare(b[0], 'th');
+    });
+
     this.doughnutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: labels.length > 0 ? labels : ['No Expenses'],
-        datasets: [{ data: data.length > 0 ? data : [1], backgroundColor: data.length > 0 ? colors : ['#e2e8f0'], borderWidth: 0, hoverOffset: 4 }]
+        labels: sortedData.length ? sortedData.map(d => d[0]) : ['ไม่มีข้อมูล'],
+        datasets: [{
+          data: sortedData.length ? sortedData.map(d => d[1].total) : [1],
+          backgroundColor: sortedData.length ? sortedData.map(d => d[1].color) : ['#f1f5f9'],
+          borderWidth: 0
+        }]
       },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } } } }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: { legend: { position: 'bottom' } }
+      }
     });
   }
 
   formatMoney(amount: number) {
-    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return amount.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }

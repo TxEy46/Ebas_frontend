@@ -9,64 +9,66 @@
 
     <div *ngIf="loading" class="loading">
       <div class="spinner"></div>
-      Loading your financial data...
+      <p>Loading your financial data...</p>
     </div>
 
     <div *ngIf="!loading" class="fade-in">
-      
+
       <div class="summary">
         <div class="card income">
           <div class="card-header">
             <p>Income</p>
             <div class="icon-bg"><span class="icon">↓</span></div>
           </div>
-          <h2>${{ formatMoney(currentMonthIncome) }}</h2>
+          <h2>฿{{ formatMoney(currentMonthIncome) }}</h2>
         </div>
-        
+
         <div class="card expense">
           <div class="card-header">
             <p>Expense</p>
             <div class="icon-bg"><span class="icon">↑</span></div>
           </div>
-          <h2>${{ formatMoney(currentMonthExpense) }}</h2>
+          <h2>฿{{ formatMoney(currentMonthExpense) }}</h2>
 
           <div class="budget-section" *ngIf="budgetAmount > 0">
             <div class="budget-labels">
-              <span>{{ budgetUsedPercent > 100 ? '>100' : (budgetUsedPercent | number:'1.0-0') }}% of Budget</span>
+              <span>{{ (budgetUsedPercent > 100 ? 100 : budgetUsedPercent) | number:'1.0-0' }}% of Budget</span>
               <span class="budget-amount-clickable" (click)="openBudgetModal()" title="Edit Budget">
-                ${{ formatMoney(budgetAmount) }} <span class="edit-icon">✎</span>
+                ฿{{ formatMoney(budgetAmount) }} <span class="edit-icon">✎</span>
               </span>
             </div>
             <div class="progress-bar-bg">
-              <div class="progress-bar-fill" 
-                   [style.width.%]="budgetUsedPercent > 100 ? 100 : budgetUsedPercent"
-                   [style.background-color]="budgetStatusColor">
+              <div class="progress-bar-fill" [style.width.%]="budgetUsedPercent > 100 ? 100 : budgetUsedPercent"
+                [style.background-color]="budgetStatusColor">
               </div>
             </div>
-            <p class="budget-warning" *ngIf="budgetUsedPercent >= 100">
-              ⚠️ You have exceeded your monthly budget!
-            </p>
+          </div>
+          <div class="set-budget-prompt" *ngIf="budgetAmount <= 0">
+            <button class="btn-setup-budget" (click)="openBudgetModal()">
+              <span class="icon">💰</span>
+              <span class="text">ตั้งเป้างบประมาณรายเดือน</span>
+            </button>
           </div>
         </div>
-        
+
         <div class="card balance">
           <div class="card-header">
             <p>Balance</p>
             <div class="icon-bg"><span class="icon">=</span></div>
           </div>
-          <h2>${{ formatMoney(currentMonthBalance) }}</h2>
+          <h2>฿{{ formatMoney(currentMonthBalance) }}</h2>
         </div>
       </div>
 
       <div class="charts-grid">
         <div class="chart-card">
-          <h3>Income & Expense (Last 6 Months)</h3>
+          <h3>Last 6 Months</h3>
           <div class="canvas-container">
             <canvas id="barChart"></canvas>
           </div>
         </div>
-        <div class="chart-card doughnut-card">
-          <h3>Expenses by Category (This Month)</h3>
+        <div class="chart-card">
+          <h3>Category Split (All)</h3>
           <div class="canvas-container">
             <canvas id="doughnutChart"></canvas>
           </div>
@@ -76,38 +78,51 @@
       <div class="transactions">
         <div class="table-header">
           <h3>Recent Transactions</h3>
-          <span class="view-all">Showing latest 5 entries</span>
+          <button class="btn-view-all" routerLink="/transactions">View All</button>
         </div>
-        
+
         <ng-container *ngIf="recentTransactions.length > 0; else noData">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Type</th>
-                <th class="align-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let t of recentTransactions">
-                <td class="text-muted">{{ t.createdate ? (t.createdate | date:'MMM d, yyyy') : '-' }}</td>
-                <td class="font-medium">{{ t.name }}</td>
-                <td><span class="category-pill">{{ t.category }}</span></td>
-                <td><span class="badge" [ngClass]="t.type">{{ t.type | titlecase }}</span></td>
-                <td class="amount align-right" [ngClass]="t.type">{{ t.type === 'income' ? '+' : '-' }}${{ formatMoney(t.amount) }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th class="align-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let t of recentTransactions">
+                  <td class="text-muted">{{ t.createdate | date:'MMM d, yyyy' }}</td>
+                  <td class="font-medium">{{ t.name }}</td>
+                  <td>
+                    <div class="category-display">
+                      <span class="color-dot" [style.background-color]="t.categories?.color"></span>
+                      <span class="category-name">{{ t.categories?.name }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="t.type">
+                      {{ t.type | titlecase }}
+                    </span>
+                  </td>
+                  <td class="amount align-right" [ngClass]="t.type">
+                    {{ t.type === 'income' ? '+' : '-' }}฿{{ formatMoney(t.amount) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
+
         <ng-template #noData>
           <div class="empty-state">
-            <p>No transactions found. Start adding some!</p>
+            <p>No transactions found for this period.</p>
           </div>
         </ng-template>
       </div>
-
     </div>
   </div>
 
@@ -118,10 +133,10 @@
         <button class="close-btn" (click)="closeBudgetModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <p>How much do you plan to spend this month?</p>
+        <p>Enter your spending limit for this month:</p>
         <div class="input-group">
-          <span class="currency-symbol">$</span>
-          <input type="number" [(ngModel)]="newBudgetAmount" min="0" placeholder="e.g. 10000" />
+          <span class="currency-addon">฿</span>
+          <input type="number" [(ngModel)]="newBudgetAmount" min="0" placeholder="0.00" />
         </div>
       </div>
       <div class="modal-footer">
@@ -130,5 +145,4 @@
       </div>
     </div>
   </div>
-
 </div>
