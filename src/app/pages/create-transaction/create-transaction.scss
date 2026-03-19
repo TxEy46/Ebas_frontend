@@ -3,40 +3,54 @@ $app-bg: #f8fafc;
 $text-main: #0f172a;
 $text-muted: #64748b;
 $green-main: #10b981;
-$green-light: #d1fae5;
+$green-hover: #059669;
+$green-light: #ecfdf5; // ปรับให้อ่อนลงเข้ากับโทนเดิม
 $red-main: #ef4444;
-$red-light: #fee2e2;
+$red-hover: #dc2626;
+$red-light: #fef2f2;
 $white: #ffffff;
 $border-color: #e2e8f0;
-$picker-bg: #f8fafc;
-$picker-border: #e2e8f0;
-$text-muted: #64748b;
+$input-bg: #f8fafc;
+
+// --- Reset & Base ---
+* {
+  box-sizing: border-box;
+}
 
 /* --- Layout --- */
 .app-fullscreen {
-  display: flex;
   width: 100%;
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: $app-bg;
-
+  
   .main {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 2rem 1rem; // ลด padding ด้านข้างในมือถือ
+
+    @media (max-width: 768px) {
+      padding: 1rem;
+      padding-bottom: 90px; // เผื่อที่ให้ Bottom Nav
+      align-items: flex-start; // ในมือถือดันฟอร์มขึ้นบนสุด
+    }
 
     .form-wrapper {
       width: 100%;
       max-width: 500px;
       background: $white;
       border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02);
+      animation: slideUpFade 0.4s ease;
+
+      @media (max-width: 768px) {
+        padding: 1.5rem; // ลด padding ในการ์ดเมื่ออยู่บนมือถือ
+      }
 
       h1 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: $text-main;
         margin-bottom: 1.5rem;
@@ -46,144 +60,10 @@ $text-muted: #64748b;
   }
 }
 
-/* --- Category Selection Row (จุดที่แก้) --- */
-.category-row-wrapper {
-  display: flex;
-  align-items: flex-start; // ให้ปุ่มกับกล่องเริ่มที่ด้านบนพร้อมกัน
-  gap: 10px;
-  width: 100%;
-}
-
-.custom-select-container {
-  flex: 1;
-  position: relative;
-
-  .selected-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-    height: 50px; // กำหนดความสูงให้แน่นอน
-    background: #f8fafc;
-    border: 2px solid $border-color;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover { border-color: #cbd5e1; }
-
-    .cat-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 500;
-    }
-
-    .gray-text { color: $text-muted; }
-
-    .arrow {
-      font-size: 10px;
-      color: $text-muted;
-      transition: transform 0.3s;
-      &.open { transform: rotate(180deg); }
-    }
-
-    // Border colors for active states
-    &.income-input:focus-within { border-color: $green-main; }
-    &.expense-input:focus-within { border-color: $red-main; }
-  }
-
-  /* Dropdown List */
-  .options-list {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    width: 100%;
-    background: $white;
-    border: 1px solid $border-color;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    z-index: 1000;
-    padding: 6px;
-    margin: 0;
-    list-style: none;
-
-    /* --- กำหนดความสูงและ Scroll --- */
-    max-height: 180px; // สูงพอดีกับ 4-5 รายการ
-    overflow-y: auto;
-
-    &::-webkit-scrollbar { width: 5px; }
-    &::-webkit-scrollbar-thumb {
-      background: #e2e8f0;
-      border-radius: 10px;
-    }
-
-    li {
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      &:hover { background: #f1f5f9; }
-
-      .system-tag {
-        margin-left: auto;
-        font-size: 9px;
-        background: #f1f5f9;
-        padding: 2px 6px;
-        border-radius: 4px;
-        color: #94a3b8;
-      }
-    }
-    
-    .no-data {
-      padding: 15px;
-      text-align: center;
-      color: $text-muted;
-    }
-  }
-}
-
-.action-buttons-group {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-
-  button {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-
-    &:hover { transform: translateY(-2px); }
-  }
-
-  .btn-add-cat {
-    background-color: #f1f5f9;
-    color: $green-main; // ให้ปุ่มเพิ่มเป็นสีเขียวจะดูเด่นขึ้น
-    font-size: 22px;
-    font-weight: bold;
-    &:hover { background-color: #e2e8f0; }
-  }
-
-  .btn-manage-cat {
-    background-color: #f1f5f9;
-    color: $text-muted;
-    font-size: 18px;
-    &:hover { background-color: #e2e8f0; }
-  }
-}
-
 /* --- Common UI Components --- */
 .type-toggle {
   display: flex;
-  background: #f1f5f9;
+  background: $input-bg;
   padding: 0.35rem;
   border-radius: 100px;
   margin-bottom: 1.5rem;
@@ -194,10 +74,11 @@ $text-muted: #64748b;
     border-radius: 100px;
     border: none;
     font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
     background: transparent;
     color: $text-muted;
-    transition: 0.3s;
+    transition: all 0.25s ease;
 
     &.active {
       background: $white;
@@ -209,41 +90,209 @@ $text-muted: #64748b;
 }
 
 .badge {
-  display: flex;
+  display: inline-flex; // เปลี่ยนเป็น inline-flex ให้กินพื้นที่แค่ตัวหนังสือ
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.2rem;
-  border-radius: 12px;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
   font-size: 0.85rem;
-  margin-bottom: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  
   span { width: 8px; height: 8px; border-radius: 50%; }
-  &.income { background: $green-light; color: #065f46; span { background: $green-main; } }
-  &.expense { background: $red-light; color: #991b1b; span { background: $red-main; } }
+  
+  &.income { 
+    background: $green-light; 
+    color: $green-hover; 
+    span { background: $green-main; } 
+  }
+  &.expense { 
+    background: $red-light; 
+    color: $red-hover; 
+    span { background: $red-main; } 
+  }
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  width: 100%;
 
-  label { font-size: 0.875rem; font-weight: 600; color: $text-main; }
+  label { 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    color: $text-main; 
+  }
 
   input {
-    padding: 0.9rem 1.2rem;
-    border-radius: 12px;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
     border: 1px solid $border-color;
-    background: #f8fafc;
+    background: $input-bg;
     font-size: 1rem;
+    color: $text-main;
     outline: none;
-    transition: 0.2s;
+    transition: all 0.2s;
 
-    &:focus { background: $white; border-color: #3b82f6; }
-    &.income-input:focus { border-color: $green-main; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
-    &.expense-input:focus { border-color: $red-main; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+    &:focus { 
+      background: $white; 
+      border-color: $green-main; // Default focus color
+    }
+    
+    // Dynamic Focus Colors
+    &.income-input:focus { 
+      border-color: $green-main; 
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); 
+    }
+    &.expense-input:focus { 
+      border-color: $red-main; 
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); 
+    }
   }
 }
 
+/* --- Category Selection Row --- */
+.category-row-wrapper {
+  display: flex;
+  align-items: stretch; // ให้ปุ่มกับ select สูงเท่ากัน
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 1.25rem;
+}
+
+.custom-select-container {
+  flex: 1;
+  position: relative;
+  min-width: 0; // ป้องกัน flex child ล้นขอบ
+
+  .selected-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 52px; // สูงเท่ากับ input ปกติ
+    background: $input-bg;
+    border: 1px solid $border-color;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover { border-color: #cbd5e1; }
+
+    .cat-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      color: $text-main;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .gray-text { color: $text-muted; }
+
+    .arrow {
+      font-size: 12px;
+      color: $text-muted;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      &.open { transform: rotate(180deg); }
+    }
+
+    &.income-input:focus-within { border-color: $green-main; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+    &.expense-input:focus-within { border-color: $red-main; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+  }
+
+  .options-list {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 100;
+    padding: 8px;
+    margin: 0;
+    list-style: none;
+    max-height: 220px; 
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+    li {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      
+      &:hover { background: #f1f5f9; }
+
+      .system-tag {
+        margin-left: auto;
+        font-size: 10px;
+        font-weight: 600;
+        background: #e2e8f0;
+        padding: 4px 8px;
+        border-radius: 6px;
+        color: $text-muted;
+      }
+    }
+    
+    .no-data {
+      padding: 1rem;
+      text-align: center;
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.action-buttons-group {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+
+  button {
+    width: 52px; // ขยายให้เท่ากับความสูงของ select
+    height: 52px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover { filter: brightness(0.95); transform: translateY(-1px); }
+    &:active { transform: translateY(0); }
+  }
+
+  .btn-add-cat {
+    background-color: $green-light;
+    color: $green-main;
+    font-size: 24px;
+  }
+
+  .btn-manage-cat {
+    background-color: #f1f5f9;
+    color: $text-muted;
+    font-size: 18px;
+  }
+}
+
+/* --- Submit Button --- */
 .btn-submit {
   width: 100%;
   padding: 1.1rem;
@@ -253,35 +302,56 @@ $text-muted: #64748b;
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  transition: 0.2s;
-  &:hover { opacity: 0.9; transform: translateY(-1px); }
-  &.btn-income { background: $green-main; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-  &.btn-expense { background: $red-main; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3); }
+  transition: all 0.2s;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); }
+  &:active { transform: translateY(0); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+  
+  &.btn-income { background: $green-main; }
+  &.btn-expense { background: $red-main; }
 }
 
-/* --- Modals --- */
+/* =========================================
+   MODALS (Create / Manage Category)
+   ========================================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1001;
   backdrop-filter: blur(4px);
+  padding: 1rem; // กันชนขอบจอในมือถือ
 }
 
 .modal-content {
   background: white;
   padding: 2rem;
   border-radius: 24px;
-  width: 90%;
+  width: 100%;
   max-width: 420px;
-  animation: modalIn 0.3s ease-out;
+  max-height: 90vh; // ป้องกัน Modal ทะลุจอมือถือ
+  overflow-y: auto; // ถ้าเนื้อหาเยอะให้ scroll ใน modal ได้
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
-  h2 { text-align: center; font-weight: 800; margin-bottom: 1.5rem; }
-  &.income-modal { border-top: 8px solid $green-main; .btn-save { background: $green-main; } }
-  &.expense-modal { border-top: 8px solid $red-main; .btn-save { background: $red-main; } }
+  h2 { 
+    text-align: center; 
+    font-weight: 800; 
+    margin-bottom: 1.5rem; 
+    font-size: 1.25rem;
+    color: $text-main;
+  }
+
+  &.income-modal { border-top: 6px solid $green-main; }
+  &.expense-modal { border-top: 6px solid $red-main; }
 }
 
 .color-dot, .color-indicator {
@@ -291,250 +361,145 @@ $text-muted: #64748b;
   flex-shrink: 0;
 }
 
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* --- Color Picker Wrapper --- */
 .color-picker-wrapper {
   display: flex;
   align-items: center;
-  gap: 16px; // เว้นระยะห่างระหว่างวงกลมกับตัวอักษร
-  background: $picker-bg;
-  padding: 12px 16px; // เพิ่ม padding รอบๆ
-  border-radius: 16px; // มุมมน
-  border: 1px solid $picker-border;
-  transition: all 0.2s ease;
+  gap: 16px;
+  background: $input-bg;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid $border-color;
+  margin-bottom: 1.5rem;
   
-  &:hover {
-    border-color: #cbd5e1; // เปลี่ยนสี border เมื่อ Hover
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03); // เพิ่มเงาจางๆ
-  }
-
-  /* ส่วนของ Input Color */
   .color-picker {
-    appearance: none; /* สำคัญ! ลบสไตล์เดิมของ OS ออกทั้งหมด */
+    appearance: none;
     -webkit-appearance: none;
-    -moz-appearance: none;
-    
-    width: 50px !important; // บังคับความกว้าง
-    height: 50px !important; // บังคับความสูง
-    padding: 0;
-    margin: 0;
+    width: 40px !important; // ปรับให้พอดีขึ้น
+    height: 40px !important;
     border: none;
-    border-radius: 50%; // ทำเป็นวงกลม
+    border-radius: 50%;
     cursor: pointer;
-    overflow: hidden; // กันส่วนเกิน
-    background: none; // ลบพื้นหลัง
-    transition: transform 0.2s;
+    background: none;
+    box-shadow: 0 0 0 2px $white, 0 0 0 3px #e2e8f0; 
 
-    // ทำวงแหวนรอบสี Swatch (Swatch Border)
-    box-shadow: 0 0 0 2px $white, 0 0 0 4px #e2e8f0; 
-
-    &:hover {
-      transform: scale(1.05); // ขยายขนาดนิดหน่อยเมื่อ Hover
-    }
-
-    /* ตกแต่งเนื้อสีข้างใน (Swatch Color) - สำหรับ Chrome/Safari */
-    &::-webkit-color-swatch-wrapper {
-      padding: 0; // ลบ padding เดิมออกให้หมด
-    }
-
-    &::-webkit-color-swatch {
-      border: none; // ลบ border เดิม
-      border-radius: 50%; // ทำเนื้อสีข้างในเป็นวงกลม
-    }
-
-    /* ตกแต่งเนื้อสีข้างใน - สำหรับ Firefox */
-    &::-moz-color-swatch {
-      border: none;
-      border-radius: 50%;
-    }
+    &::-webkit-color-swatch-wrapper { padding: 0; }
+    &::-webkit-color-swatch { border: none; border-radius: 50%; }
+    &::-moz-color-swatch { border: none; border-radius: 50%; }
   }
 
-  /* ส่วนของ Hex Code Text */
   .color-value {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; // ฟอนต์สำหรับโค้ด
-    font-size: 1rem;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.95rem;
     font-weight: 600;
-    letter-spacing: 1.5px; // เว้นระยะห่างตัวอักษรเพื่อให้มองง่าย
     color: $text-muted;
     background: transparent;
-    padding: 2px 0;
     border: none;
-    text-transform: uppercase; // บังคับตัวพิมพ์ใหญ่ทั้งหมด (กัน Error จาก Pipe)
+    text-transform: uppercase;
   }
 }
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid $border-color;
 
   button {
-    padding: 0.8rem 1.8rem;
-    border-radius: 14px; // มนสวยรับกับกล่อง
+    flex: 1; // ให้ปุ่มแบ่งครึ่งเท่าๆ กัน
+    padding: 0.85rem;
+    border-radius: 12px;
     font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
-    outline: none;
+    transition: all 0.2s;
 
-    &:active {
-      transform: scale(0.96); // เอฟเฟกต์ตอนกด
-    }
-  }
-
-  /* ปุ่มยกเลิก: เน้นความเรียบง่าย ไม่แย่งสายตา */
-  .btn-cancel {
-    background: #f1f5f9;
-    color: #64748b;
-
-    &:hover {
-      background: #e2e8f0;
-      color: #475569;
-    }
-  }
-
-  /* ปุ่มบันทึก: เด่นชัดและมีเงา */
-  .btn-save {
-    color: white;
-    // สีพื้นหลังจะถูกคุมด้วย class .income-modal หรือ .expense-modal ที่ตัวแม่
-    
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      filter: brightness(1.1); // สว่างขึ้นนิดหน่อยเมื่อชี้
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-      transform: translateY(-1px);
+    &.btn-cancel {
+      background: $input-bg;
+      color: $text-muted;
+      &:hover { background: #e2e8f0; color: $text-main; }
     }
   }
 }
 
-/* ใส่สีปุ่มตามประเภท Modal (Income = Green, Expense = Red) */
-.income-modal .btn-save {
-  background: $green-main;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-}
+.income-modal .btn-save { background: $green-main; color: white; }
+.expense-modal .btn-save { background: $red-main; color: white; }
 
-.expense-modal .btn-save {
-  background: $red-main;
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
-}
-
+/* --- Manage Category List --- */
 .category-list {
-  max-height: 320px; // จำกัดความสูงให้เลื่อนได้
+  max-height: 300px;
   overflow-y: auto;
-  padding-right: 8px; // เผื่อที่ให้ scrollbar ไม่ทับเนื้อหา
-  margin: 1.5rem 0;
+  margin: 1rem 0;
+  padding-right: 4px;
 
-  /* ตกแต่ง Scrollbar ให้ดู Minimal */
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 10px;
-  }
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 
   .category-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
-    background: #ffffff;
-    border: 1px solid #f1f5f9;
-    border-radius: 14px;
+    padding: 12px;
+    background: $white;
+    border: 1px solid $border-color;
+    border-radius: 12px;
     margin-bottom: 8px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: #f8fafc;
-      border-color: #e2e8f0;
-      transform: translateX(4px); // เลื่อนขวาเล็กน้อยเวลาชี้
-    }
-
+    
     .cat-info {
       display: flex;
       align-items: center;
       gap: 12px;
-
-      .color-indicator {
-        width: 14px;
-        height: 14px;
-        border-radius: 4px; // เปลี่ยนจากวงกลมเป็นมนเหลี่ยมดูทันสมัยขึ้น
-        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
-      }
-
+      
+      .color-indicator { border-radius: 4px; }
       .cat-name {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 600;
         color: $text-main;
-        display: flex;
-        align-items: center;
-
+        
         small {
-          background: #f1f5f9;
+          background: $input-bg;
           padding: 2px 6px;
           border-radius: 4px;
-          font-weight: 500;
-          color: #94a3b8;
+          color: $text-muted;
           margin-left: 8px;
+          font-size: 0.75rem;
         }
       }
     }
 
     .actions {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 4px;
 
       button {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
         border: none;
-        background: #f1f5f9;
+        background: transparent;
         cursor: pointer;
-        transition: all 0.2s;
-        font-size: 1.1rem;
-
-        &.btn-edit-icon {
-          color: #3b82f6;
-          &:hover {
-            background: #dbeafe;
-            transform: scale(1.1);
-          }
-        }
-
-        &.btn-delete-icon {
-          color: #ef4444;
-          &:hover {
-            background: #fee2e2;
-            transform: scale(1.1);
-          }
-        }
-      }
-
-      /* ไอคอนแม่กุญแจสำหรับ System Category */
-      span {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        font-size: 0.9rem;
-        opacity: 0.4;
-        filter: grayscale(1);
+        transition: 0.2s;
+
+        &.btn-edit-icon { color: #3b82f6; &:hover { background: #eff6ff; } }
+        &.btn-delete-icon { color: $red-main; &:hover { background: $red-light; } }
       }
+      span { font-size: 0.9rem; color: #cbd5e1; width: 32px; text-align: center; }
     }
   }
+}
+
+/* Animations */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

@@ -24,6 +24,7 @@ interface Transaction {
     name: string;
     color: string;
   };
+  showMenu?: boolean;
 }
 
 @Component({

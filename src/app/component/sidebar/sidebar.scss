@@ -193,3 +193,97 @@ $border-color: #e2e8f0;
     }
   }
 }
+
+/* =========================================
+   📱 MOBILE BOTTOM NAVIGATION
+   ========================================= */
+@media (max-width: 768px) {
+  /* บังคับลบผลของ class .collapsed ในมือถือทิ้งไป */
+  .sidebar, .sidebar.collapsed {
+    width: 100%;
+    height: 70px;
+    padding: 0;
+    flex-direction: row;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid $border-color;
+    border-radius: 20px 20px 0 0; /* ทำมุมมนด้านบนนิดๆ ให้ดู Premium */
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+    background: $white;
+    z-index: 1000;
+
+    /* ซ่อนปุ่ม Toggle และ Logo บนมือถือ */
+    .toggle-btn, .logo-container {
+      display: none;
+    }
+
+    .nav-links {
+      flex-direction: row;
+      justify-content: space-between; /* กระจายปุ่มให้ห่างเท่าๆ กัน */
+      align-items: center;
+      width: 100%;
+      padding: 0 1.5rem; /* ระยะห่างขอบซ้ายขวา */
+
+      li {
+        display: flex;
+        justify-content: center;
+
+        a {
+          flex-direction: row; /* จัดไอคอนกับข้อความให้อยู่แนวนอน */
+          padding: 0.6rem;
+          border-radius: 20px;
+          gap: 0.4rem;
+          background: transparent;
+
+          /* ซ่อนขีดสีเขียวด้านซ้ายของ Desktop */
+          &::before {
+            display: none;
+          }
+
+          /* ซ่อนข้อความไว้ก่อน */
+          .text {
+            display: none;
+            width: auto;
+            opacity: 1;
+            visibility: visible;
+            font-size: 0.85rem;
+            font-weight: 700;
+          }
+
+          /* 🌟 ลูกเล่น: เมื่อปุ่มถูกเลือก (Active) ให้แสดงข้อความ */
+          &.active {
+            background: $green-light;
+            padding: 0.6rem 1rem; /* ยืดปุ่มออก */
+            
+            .text {
+              display: block; /* โชว์ข้อความ */
+              animation: fadeIn 0.3s ease;
+            }
+          }
+        }
+      }
+
+      /* จัดการปุ่ม Logout ให้อยู่ในแถวเดียวกัน */
+      .logout-item {
+        margin-top: 0; 
+        
+        .logout-link {
+          padding: 0.6rem;
+          
+          &:hover {
+            background: $red-light;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* อนิเมชั่นตอนข้อความโผล่ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-5px); }
+  to { opacity: 1; transform: translateX(0); }
+}

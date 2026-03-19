@@ -17,6 +17,7 @@ interface Transaction {
     name: string;
     color: string;
   };
+  showMenu?: boolean;
 }
 
 @Component({
@@ -53,7 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   readonly serverUrl = 'https://ebas-backend.onrender.com';
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private cd: ChangeDetectorRef,
     private router: Router
   ) { }
@@ -184,12 +185,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const today = new Date();
     const monthYear = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-    
+
     // ส่งข้อมูลไปบันทึกพร้อม user_id
-    const payload = { 
-      month_year: monthYear, 
+    const payload = {
+      month_year: monthYear,
       amount: this.newBudgetAmount,
-      user_id: this.userData.id 
+      user_id: this.userData.id
     };
 
     this.http.post(`${this.serverUrl}/api/budgets`, payload).subscribe({
@@ -294,5 +295,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   formatMoney(amount: number) {
     return amount.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  editTransaction(transaction: any) {
+    console.log('Editing transaction:', transaction);
+    // TODO: ใส่ Logic ของคุณตรงนี้ เช่น เปิด Modal แก้ไข หรือ Router ไปหน้า Edit
+  }
+
+  deleteTransaction(id: string | number) {
+    if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการนี้?')) {
+      console.log('Deleting transaction ID:', id);
+      // TODO: ใส่ Logic เรียก API ลบข้อมูลที่นี่
+
+      // ตัวอย่างการอัปเดต UI ชั่วคราวหลังลบสำเร็จ:
+      // this.recentTransactions = this.recentTransactions.filter(t => t.id !== id);
+    }
   }
 }

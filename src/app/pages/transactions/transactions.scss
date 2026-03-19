@@ -1,16 +1,26 @@
+// --- Variables (Sync กับหน้าอื่นๆ) ---
 $app-bg: #f8fafc;
+$input-bg: #f8fafc;
 $text-main: #0f172a;
 $text-muted: #64748b;
 $green-main: #10b981;
+$green-hover: #059669;
+$green-light: #ecfdf5;
 $red-main: #ef4444;
+$red-light: #fef2f2;
+$blue-main: #3b82f6;
 $white: #ffffff;
 $border-color: #e2e8f0;
 $hover-bg: #f1f5f9;
 
+* {
+  box-sizing: border-box;
+}
+
 .page-layout {
   min-height: 100vh;
   background-color: $app-bg;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: $text-main;
 }
 
@@ -31,7 +41,15 @@ $hover-bg: #f1f5f9;
   padding: 2rem 3rem;
   max-width: 1400px;
   margin: 0 auto;
+  animation: slideUpFade 0.4s ease;
 
+  // 📱 Mobile Adjustments สำหรับหน้าที่มีตาราง
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+    padding-bottom: 90px; // 🛑 สำคัญมาก: กันไม่ให้ Bottom Navigation ทับ Pagination
+  }
+
+  /* --- Header & Filters --- */
   .header-section {
     display: flex;
     justify-content: space-between;
@@ -40,16 +58,26 @@ $hover-bg: #f1f5f9;
     flex-wrap: wrap;
     gap: 1.5rem;
 
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
     h1 {
       font-size: 2.2rem;
       font-weight: 800;
       margin: 0;
       position: relative;
       display: inline-block;
-      background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, $text-main 0%, $blue-main 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+
+      @media (max-width: 768px) {
+        font-size: 1.8rem;
+      }
 
       &::after {
         content: '';
@@ -67,26 +95,35 @@ $hover-bg: #f1f5f9;
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      width: 100%;
+      max-width: max-content;
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
 
       label {
         font-weight: 600;
         color: $text-muted;
         font-size: 0.95rem;
+        white-space: nowrap;
       }
 
       .select-wrapper {
         position: relative;
         display: inline-block;
+        flex: 1;
 
         select {
           appearance: none;
-          padding: 0.6rem 2.5rem 0.6rem 1.2rem;
+          width: 100%;
+          padding: 0.65rem 2.5rem 0.65rem 1.2rem;
           border-radius: 12px;
           border: 1px solid $border-color;
           background: $white;
           font-family: inherit;
           font-size: 0.95rem;
-          font-weight: 500;
+          font-weight: 600;
           color: $text-main;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -94,7 +131,7 @@ $hover-bg: #f1f5f9;
 
           &:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: $blue-main;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
           }
         }
@@ -111,18 +148,34 @@ $hover-bg: #f1f5f9;
     }
   }
 
+  /* --- Table Section --- */
   .table-container {
     background: $white;
     border-radius: 24px;
     border: 1px solid $border-color;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+
+    @media (max-width: 768px) {
+      border-radius: 16px; // ลดความมนลงนิดหน่อยในมือถือ
+      overflow-x: auto; // ปล่อยให้เลื่อนซ้ายขวาได้
+
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    }
   }
 
   .transactions-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
+    min-width: 650px; // บังคับความกว้างขั้นต่ำไม่ให้ตารางพังในมือถือ
 
     th,
     td {
@@ -140,8 +193,8 @@ $hover-bg: #f1f5f9;
     }
 
     th {
-      background: $white;
-      font-weight: 600;
+      background: #f8fafc; // ให้หัวตารางสีต่างจากเนื้อหานิดนึง
+      font-weight: 700;
       color: $text-muted;
       text-transform: uppercase;
       font-size: 0.75rem;
@@ -172,18 +225,21 @@ $hover-bg: #f1f5f9;
     }
 
     .category-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.35rem 0.85rem;
       background: $app-bg;
       border: 1px solid $border-color;
       border-radius: 100px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 500;
-      color: $text-muted;
+      color: $text-main;
     }
 
     td.amount {
       font-weight: 700;
+      font-size: 1rem;
 
       &.income {
         color: $green-main;
@@ -195,6 +251,145 @@ $hover-bg: #f1f5f9;
     }
   }
 
+  /* --- Action Menu (Three Dots Dropdown) --- */
+  .action-col {
+    text-align: center;
+  }
+
+  .menu-container {
+    position: relative;
+    display: inline-block;
+
+    .btn-more {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      color: $text-muted;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: $hover-bg;
+        color: $text-main;
+      }
+    }
+
+    .action-dropdown {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background: $white;
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      min-width: 130px;
+      z-index: 50;
+      overflow: hidden;
+      animation: modalIn 0.2s ease-out;
+      display: flex;
+      flex-direction: column;
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s;
+        color: $text-main;
+
+        svg {
+          flex-shrink: 0;
+          color: $text-muted;
+          transition: color 0.2s;
+        }
+
+        &:hover {
+          background-color: $hover-bg;
+        }
+
+        &.btn-edit-dropdown:hover {
+          color: $blue-main;
+
+          svg {
+            color: $blue-main;
+          }
+        }
+
+        &.btn-delete-dropdown {
+          color: $red-main;
+
+          svg {
+            color: $red-main;
+          }
+
+          &:hover {
+            background-color: $red-light;
+          }
+        }
+      }
+    }
+  }
+
+  /* --- Pagination --- */
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0;
+
+    @media (max-width: 768px) {
+      justify-content: center; // มือถือให้อยู่ตรงกลาง
+    }
+
+    button {
+      padding: 0.6rem 1.2rem;
+      border: 1px solid $border-color;
+      background-color: $white;
+      color: $text-main;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+      &:hover:not(:disabled) {
+        background-color: $hover-bg;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f9fafb;
+        box-shadow: none;
+      }
+    }
+
+    span {
+      font-size: 0.9rem;
+      color: $text-muted;
+      font-weight: 500;
+    }
+  }
+
+  /* --- Loading State --- */
   .state-message {
     padding: 4rem 2rem;
     display: flex;
@@ -209,253 +404,180 @@ $hover-bg: #f1f5f9;
       font-weight: 500;
     }
 
-    svg {
-      color: #cbd5e1;
-    }
-
     .spinner {
       width: 32px;
       height: 32px;
       border: 3px solid $border-color;
-      border-top-color: #3b82f6;
+      border-top-color: $blue-main;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
   }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .layout {
-      flex-direction: column;
-    }
-
-    .content {
-      padding: 1.5rem;
-
-      .header-section {
-        flex-direction: column;
-        align-items: flex-start;
-
-        h1 {
-          font-size: 1.8rem;
-        }
-      }
-
-      .table-container {
-        overflow-x: auto;
-      }
-
-      .transactions-table {
-        min-width: 600px;
-      }
-    }
-  }
 }
 
-.btn-icon {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s, color 0.2s;
-  color: #71717a;
-
-  &:hover {
-    background-color: #f4f4f5;
-  }
-
-  svg {
-    display: block;
-  }
-}
-
-.btn-edit:hover {
-  color: #2563eb;
-  background-color: #dbeafe;
-}
-
-.btn-delete:hover {
-  color: #dc2626;
-  background-color: #fee2e2;
-}
-
-.action-col {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-}
-
+/* =========================================
+   MODALS (Edit Transaction / etc.)
+   ========================================= */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  backdrop-filter: blur(4px);
+  padding: 1rem;
 }
 
 .modal-content {
   background-color: white;
-  padding: 24px 32px;
-  border-radius: 12px;
+  padding: 2rem;
+  border-radius: 24px;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 480px; // กว้างขึ้นนิดหน่อยสำหรับฟอร์ม Edit
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   h2 {
     margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    color: #1f2937;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $text-main;
     text-align: center;
   }
 
-  // 🔹 เพิ่มสไตล์ Dropdown ใน Modal
-  .select-wrapper {
-    position: relative;
-    width: 100%;
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr; // มือถือให้เรียงบนลงล่าง
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    input,
     select {
-      appearance: none;
       width: 100%;
-      padding: 10px 12px;
-      padding-right: 35px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      background: white;
+      padding: 0.85rem 1rem;
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      background: $input-bg;
       font-size: 1rem;
-      cursor: pointer;
+      color: $text-main;
+      box-sizing: border-box;
+      transition: all 0.2s;
 
       &:focus {
         outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: $white;
+        border-color: $blue-main;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
       }
     }
 
-    .chevron {
+    // Select Wrapper inside Modal
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+
+      select {
+        padding-right: 35px;
+        appearance: none;
+        cursor: pointer;
+      }
+
+      .chevron {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        pointer-events: none;
+      }
+    }
+  }
+
+  /* Color dot indicator for category in inputs */
+  .input-with-indicator {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .current-color-dot {
       position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #64748b;
-      pointer-events: none;
+      left: 14px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+
+    input {
+      padding-left: 36px !important; // เว้นที่ให้จุดสี
     }
   }
-}
 
-.form-group {
-  margin-bottom: 16px;
-
-  label {
+  .help-text {
     display: block;
-    margin-bottom: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #4b5563;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: $text-muted;
   }
 
-  input,
-  select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid $border-color;
 
-    &:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-  }
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-
-  button {
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.2s;
-  }
-
-  .btn-cancel {
-    background-color: #f3f4f6;
-    color: #374151;
-
-    &:hover {
-      background-color: #e5e7eb;
-    }
-  }
-
-  .btn-save {
-    background-color: #3b82f6;
-    color: white;
-
-    &:hover {
-      background-color: #2563eb;
-    }
-  }
-}
-
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 16px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  padding: 0 16px;
-
-  button {
-    padding: 8px 16px;
-    border: 1px solid #e5e7eb;
-    background-color: white;
-    color: #374151;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover:not(:disabled) {
-      background-color: #f3f4f6;
-      border-color: #d1d5db;
+    button {
+      flex: 1;
+      padding: 0.85rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
     }
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background-color: #f9fafb;
-    }
-  }
+    .btn-cancel {
+      background-color: $input-bg;
+      color: $text-muted;
 
-  span {
-    font-size: 0.9rem;
-    color: #6b7280;
-    font-weight: 500;
+      &:hover {
+        background-color: #e2e8f0;
+        color: $text-main;
+      }
+    }
+
+    .btn-save {
+      background-color: $blue-main;
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+      &:hover {
+        background-color: #2563eb;
+        transform: translateY(-1px);
+      }
+    }
   }
 }
 
@@ -473,39 +595,38 @@ $hover-bg: #f1f5f9;
 
   .category-name {
     font-size: 0.9rem;
-    color: #475569;
+    color: $text-main;
+    font-weight: 500;
   }
 }
 
-.input-with-indicator {
-  display: flex;
-  align-items: center;
-  position: relative;
-
-  .current-color-dot {
-    position: absolute;
-    left: 12px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  input {
-    padding-left: 35px !important; // เว้นที่ให้จุดสี
-    width: 100%;
+/* Animations */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-.help-text {
-  display: block;
-  margin-top: 4px;
-  font-size: 0.75rem;
-  color: #64748b;
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
