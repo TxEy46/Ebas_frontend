@@ -1,1 +1,149 @@
-c
+<div class="page-layout">
+    <div class="layout">
+        <app-sidebar class="sidebar"></app-sidebar>
+
+        <div class="content">
+            <div class="header-section">
+                <h1>Transactions</h1>
+                <div class="filter">
+                    <label for="monthSelect">Filter by Month:</label>
+                    <div class="select-wrapper">
+                        <select id="monthSelect" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()">
+                            <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+                        </select>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <ng-container *ngIf="!isLoading; else loading">
+                    <ng-container *ngIf="getPaginatedTransactions().length > 0; else empty">
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction Name</th>
+                                    <th>Category</th>
+                                    <th class="align-right">Amount</th>
+                                    <th class="align-right">Date</th>
+                                    <th class="align-center">Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let tx of getPaginatedTransactions()">
+                                    <td class="fw-500">{{ tx.name }}</td>
+                                    <td>
+                                        <div class="category-display">
+                                            <span class="color-dot"
+                                                [style.background-color]="tx.categories?.color || '#cbd5e1'"></span>
+                                            <span class="category-name">{{ tx.categories?.name || 'อื่นๆ' }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="align-right amount" [ngClass]="tx.type">
+                                        {{ tx.type === 'income' ? '+' : '-' }}${{ tx.amount | number:'1.2-2' }}
+                                    </td>
+                                    <td class="align-right date-col">{{ tx.createdate | date:'MMM d, yyyy, HH:mm' }}
+                                    </td>
+                                    <td class="align-center action-col">
+                                        <button class="btn-icon btn-edit" (click)="editTransaction(tx)" title="แก้ไข">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                                <path d="m15 5 4 4" />
+                                            </svg>
+                                        </button>
+                                        <button class="btn-icon btn-delete" (click)="deleteTransaction(tx.id)"
+                                            title="ลบ">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path d="M3 6h18" />
+                                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                                <line x1="10" x2="10" y1="11" y2="17" />
+                                                <line x1="14" x2="14" y1="11" y2="17" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="pagination" *ngIf="totalFilteredItems > itemsPerPage">
+                            <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
+                            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+                            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+                <ng-template #loading>
+                    <div class="state-message loading">
+                        <div class="spinner"></div>
+                        Loading your transactions...
+                    </div>
+                </ng-template>
+
+                <ng-template #empty>
+                    <div class="state-message empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                            <path d="m9 16 2 2 4-4" />
+                        </svg>
+                        <p>No transactions found for this month.</p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Edit Transaction</h2>
+
+        <div class="form-group">
+            <label>Transaction Name</label>
+            <input type="text" [(ngModel)]="editFormData.name">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Type</label>
+                <select [(ngModel)]="editFormData.type" (ngModelChange)="onTypeChange()">
+                    <option value="income">Income (+)</option>
+                    <option value="expense">Expense (-)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <div class="select-wrapper">
+                    <select [(ngModel)]="editFormData.category_id">
+                        <option *ngFor="let cat of filteredCategories" [value]="cat.id">
+                            {{ cat.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="number" [(ngModel)]="editFormData.amount">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+            <button class="btn-save" (click)="saveEdit()">Save Changes</button>
+        </div>
+    </div>
+</div>
