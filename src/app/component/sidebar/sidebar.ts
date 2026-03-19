@@ -12,7 +12,7 @@ import { RouterModule, Router } from '@angular/router';
 export class SidebarComponent {
   isCollapsed = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -20,8 +20,8 @@ export class SidebarComponent {
 
   onLogout() {
     // 1. 🛑 สำคัญมาก: ต้องลบข้อมูล user ออกจาก localStorage
-    localStorage.removeItem('user');
-    
+    localStorage.clear()
+
     // ถ้ามีการเก็บ token หรือข้อมูลอื่นๆ ให้ล้างออกให้หมด
     // localStorage.clear(); // หรือจะใช้คำสั่งนี้เพื่อล้างทั้งหมดในทีเดียวก็ได้
 
