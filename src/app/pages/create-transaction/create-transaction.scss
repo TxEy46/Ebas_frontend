@@ -504,7 +504,7 @@ $input-bg: #f8fafc;
   flex-shrink: 0;
 }
 
-/* --- Color Picker Wrapper --- */
+/* --- ปรับแต่ง Color Picker ให้เต็มวงกลมสวยๆ --- */
 .color-picker-wrapper {
   display: flex;
   align-items: center;
@@ -518,23 +518,27 @@ $input-bg: #f8fafc;
   .color-picker {
     appearance: none;
     -webkit-appearance: none;
-    width: 40px !important; // ปรับให้พอดีขึ้น
-    height: 40px !important;
+    width: 44px !important;  /* ขยายขนาดขึ้นนิดหน่อย */
+    height: 44px !important;
     border: none;
-    border-radius: 50%;
     cursor: pointer;
     background: none;
-    box-shadow: 0 0 0 2px $white, 0 0 0 3px #e2e8f0;
+    padding: 0;             /* 👈 สำคัญมาก: ล้าง padding ออกเพื่อให้สีเต็มวง */
+    overflow: hidden;       /* 👈 บังคับให้สีไม่ล้นขอบ */
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px $white, 0 0 0 3px $border-color; /* เพิ่มเส้นขอบหลอกให้ดูมีมิติ */
 
+    // สำหรับ Chrome, Safari, Edge
     &::-webkit-color-swatch-wrapper {
-      padding: 0;
+      padding: 0;           /* 👈 ล้างช่องว่างระหว่างขอบกับสี */
     }
 
     &::-webkit-color-swatch {
-      border: none;
+      border: none;         /* 👈 ลบขอบด้านในของสี */
       border-radius: 50%;
     }
 
+    // สำหรับ Firefox
     &::-moz-color-swatch {
       border: none;
       border-radius: 50%;
@@ -543,11 +547,9 @@ $input-bg: #f8fafc;
 
   .color-value {
     font-family: 'SFMono-Regular', Consolas, monospace;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: $text-muted;
-    background: transparent;
-    border: none;
+    font-size: 1rem;       /* ปรับขนาดตัวหนังสือ Code สี */
+    font-weight: 700;
+    color: $text-main;     /* เปลี่ยนเป็นสีเข้มให้เห็นชัดขึ้น */
     text-transform: uppercase;
   }
 }
