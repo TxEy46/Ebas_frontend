@@ -362,8 +362,15 @@ $orange-main: #f59e0b;
       .table-responsive {
         width: 100%;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        /* 📌 ลบ margin-bottom ลบ 120px ที่ทำให้ตารางลอยหายไปทิ้งแล้วครับ! */
+        -webkit-overflow-scrolling: touch; /* 📌 ลบ margin-bottom ลบ 120px ที่ทำให้ตารางลอยหายไปทิ้งแล้วครับ! */
+
+        /* 📌 เพิ่มส่วนนี้เพื่อซ่อน Scrollbar */
+        scrollbar-width: none; // สำหรับ Firefox
+        -ms-overflow-style: none; // สำหรับ IE และ Edge
+
+        &::-webkit-scrollbar {
+          display: none; // สำหรับ Chrome, Safari และ Opera
+        }
       }
 
       table {
