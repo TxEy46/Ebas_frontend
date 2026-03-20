@@ -3,13 +3,13 @@
 
   <main class="main">
     <div class="form-wrapper">
-      <h1>Create Transaction</h1>
+      <h1>สร้างรายการใหม่</h1>
 
       <div class="type-toggle">
         <button type="button" (click)="setType('income')"
-          [ngClass]="{'active income': type === 'income'}">Income</button>
+          [ngClass]="{'active income': type === 'income'}">รายรับ</button>
         <button type="button" (click)="setType('expense')"
-          [ngClass]="{'active expense': type === 'expense'}">Expense</button>
+          [ngClass]="{'active expense': type === 'expense'}">รายจ่าย</button>
       </div>
 
       <div [ngClass]="type === 'income' ? 'badge income' : 'badge expense'">
@@ -19,12 +19,15 @@
 
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="input-group">
-          <label>Amount</label>
-          <input type="number" formControlName="amount" [ngClass]="type + '-input'" placeholder="0.00">
+          <label>จำนวนเงิน</label>
+          <div class="input-with-addon">
+            <input type="number" formControlName="amount" [ngClass]="type + '-input'" placeholder="0.00">
+            <span class="currency-addon">บาท</span>
+          </div>
         </div>
 
         <div class="input-group">
-          <label>Category</label>
+          <label>หมวดหมู่</label>
 
           <div class="category-row-wrapper">
 
@@ -34,7 +37,7 @@
                   <span class="color-dot" [style.background]="selectedCategory.color"></span>
                   {{ selectedCategory.name }}
                 </div>
-                <ng-template #placeholder><span class="gray-text">-- Select --</span></ng-template>
+                <ng-template #placeholder><span class="gray-text">-- เลือกหมวดหมู่ --</span></ng-template>
                 <span class="arrow" [class.open]="isDropdownOpen">▼</span>
               </div>
 
@@ -42,40 +45,42 @@
                 <li *ngFor="let cat of filteredCategories; trackBy: trackById" (click)="selectCategory(cat)">
                   <span class="color-dot" [style.background]="cat.color"></span>
                   <span class="cat-text">{{ cat.name }}</span>
-                  <small *ngIf="cat.user_id === null" class="system-tag">System</small>
+                  <small *ngIf="cat.user_id === null" class="system-tag">ระบบ</small>
                 </li>
-                <li *ngIf="filteredCategories.length === 0" class="no-data">No categories found</li>
+                <li *ngIf="filteredCategories.length === 0" class="no-data">ไม่พบหมวดหมู่</li>
               </ul>
             </div>
 
             <div class="action-buttons-group">
-              <button type="button" class="btn-add-cat" (click)="openCategoryModal()">+</button>
-              <button type="button" class="btn-manage-cat" (click)="openManageModal()">⚙️</button>
+              <button type="button" class="btn-add-cat" (click)="openCategoryModal()" title="เพิ่มหมวดหมู่ใหม่">+</button>
+              <button type="button" class="btn-manage-cat" (click)="openManageModal()" title="จัดการหมวดหมู่">⚙️</button>
             </div>
           </div>
         </div>
 
         <div class="input-group">
-          <label>Name</label>
-          <input type="text" formControlName="name" [ngClass]="type + '-input'" placeholder="e.g. Lunch">
+          <label>ชื่อรายการ</label>
+          <input type="text" formControlName="name" [ngClass]="type + '-input'" placeholder="เช่น ค่ากาแฟ, เงินเดือน">
         </div>
 
-        <button type="submit" class="btn-submit" [ngClass]="'btn-' + type">Save {{ type | titlecase }}</button>
+        <button type="submit" class="btn-submit" [ngClass]="'btn-' + type">
+          บันทึก{{ type === 'income' ? 'รายรับ' : 'รายจ่าย' }}
+        </button>
       </form>
     </div>
   </main>
 
   <div class="modal-overlay" *ngIf="isCategoryModalOpen">
     <div class="modal-content" [ngClass]="type === 'income' ? 'income-modal' : 'expense-modal'">
-      <h2>{{ isEditMode ? 'Edit' : 'Add New' }} {{ type | titlecase }} Category</h2>
+      <h2>{{ isEditMode ? 'แก้ไข' : 'เพิ่ม' }}หมวดหมู่{{ type === 'income' ? 'รายรับ' : 'รายจ่าย' }}</h2>
 
       <div class="input-group">
-        <label>Category Name</label>
-        <input type="text" [(ngModel)]="newCategoryName" placeholder="e.g. Salary, Food">
+        <label>ชื่อหมวดหมู่</label>
+        <input type="text" [(ngModel)]="newCategoryName" placeholder="เช่น เงินเดือน, ค่าอาหาร">
       </div>
 
       <div class="input-group">
-        <label>Category Color</label>
+        <label>สีหมวดหมู่</label>
         <div class="color-picker-wrapper">
           <input type="color" class="color-picker" [(ngModel)]="newCategoryColor">
           <span class="color-value">{{ newCategoryColor | uppercase }}</span>
@@ -83,9 +88,9 @@
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn-cancel" (click)="closeCategoryModal()">Cancel</button>
+        <button type="button" class="btn-cancel" (click)="closeCategoryModal()">ยกเลิก</button>
         <button type="button" class="btn-save" (click)="saveNewCategory()">
-          {{ isEditMode ? 'Update' : 'Save' }}
+          {{ isEditMode ? 'อัปเดตข้อมูล' : 'บันทึก' }}
         </button>
       </div>
     </div>
@@ -94,7 +99,7 @@
   <div class="modal-overlay" *ngIf="isManageModalOpen">
     <div class="modal-content manage-modal">
       <div class="modal-header">
-        <h2>Manage {{ type | titlecase }}</h2>
+        <h2>จัดการหมวดหมู่{{ type === 'income' ? 'รายรับ' : 'รายจ่าย' }}</h2>
       </div>
 
       <div class="category-list" *ngIf="filteredCategories.length > 0; else noData">
@@ -104,27 +109,27 @@
             <span class="cat-name">
               {{ cat.name }}
               <small *ngIf="cat.user_id === null"
-                style="color: #94a3b8; font-size: 0.7rem; margin-left: 5px;">(System)</small>
+                style="color: #94a3b8; font-size: 0.7rem; margin-left: 5px;">(ค่าเริ่มต้นระบบ)</small>
             </span>
           </div>
 
           <div class="actions">
             <ng-container *ngIf="cat.user_id !== null">
-              <button type="button" class="btn-edit-icon" (click)="openEditCategory(cat)">✏️</button>
-              <button type="button" class="btn-delete-icon" (click)="deleteCategory(cat.id)">🗑️</button>
+              <button type="button" class="btn-edit-icon" (click)="openEditCategory(cat)" title="แก้ไข">✏️</button>
+              <button type="button" class="btn-delete-icon" (click)="deleteCategory(cat.id)" title="ลบ">🗑️</button>
             </ng-container>
 
-            <span *ngIf="cat.user_id === null" title="System category cannot be modified">🔒</span>
+            <span *ngIf="cat.user_id === null" title="ไม่สามารถแก้ไขหมวดหมู่เริ่มต้นของระบบได้">🔒</span>
           </div>
         </div>
       </div>
 
       <ng-template #noData>
-        <div class="empty-state">No categories found.</div>
+        <div class="empty-state">ไม่พบข้อมูลหมวดหมู่</div>
       </ng-template>
 
       <div class="modal-actions">
-        <button type="button" class="btn-cancel" (click)="closeManageModal()">Close</button>
+        <button type="button" class="btn-cancel" (click)="closeManageModal()">ปิดหน้าต่าง</button>
       </div>
     </div>
   </div>

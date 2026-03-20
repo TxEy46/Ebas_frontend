@@ -21,27 +21,28 @@ $input-bg: #f8fafc;
 .app-fullscreen {
   width: 100%;
   min-height: 100vh;
-  display: flex; 
+  display: flex;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: $app-bg;
-  
+
   .main {
-    flex: 1; 
-    min-height: 100vh; 
+    flex: 1;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    
+
     /* 1. เปลี่ยนจาก center เป็น flex-start เพื่อให้กล่องเด้งไปติดขอบบน */
-    align-items: flex-start; 
-    
+    align-items: flex-start;
+
     /* 2. ปรับระยะดันลงมาจากขอบบนตรงนี้ (5rem) ถ้าอยากให้สูงกว่านี้อีกให้ลดเลขลง (เช่น 3rem) */
-    padding: 1rem 1rem 2rem 1rem; 
+    padding: 1rem 1rem 2rem 1rem;
 
     @media (max-width: 768px) {
-      padding: 2rem 1rem; /* ขยับระยะบนมือถือให้พอดี */
-      padding-bottom: 90px; 
-      align-items: flex-start; 
-      min-height: auto; 
+      padding: 2rem 1rem;
+      /* ขยับระยะบนมือถือให้พอดี */
+      padding-bottom: 90px;
+      align-items: flex-start;
+      min-height: auto;
     }
 
     .form-wrapper {
@@ -50,7 +51,7 @@ $input-bg: #f8fafc;
       background: $white;
       border-radius: 24px;
       padding: 2.5rem 2rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
       animation: slideUpFade 0.4s ease;
 
       @media (max-width: 768px) {
@@ -90,9 +91,15 @@ $input-bg: #f8fafc;
 
     &.active {
       background: $white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      &.income { color: $green-main; }
-      &.expense { color: $red-main; }
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      &.income {
+        color: $green-main;
+      }
+
+      &.expense {
+        color: $red-main;
+      }
     }
   }
 }
@@ -106,18 +113,29 @@ $input-bg: #f8fafc;
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  
-  span { width: 8px; height: 8px; border-radius: 50%; }
-  
-  &.income { 
-    background: $green-light; 
-    color: $green-hover; 
-    span { background: $green-main; } 
+
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
   }
-  &.expense { 
-    background: $red-light; 
-    color: $red-hover; 
-    span { background: $red-main; } 
+
+  &.income {
+    background: $green-light;
+    color: $green-hover;
+
+    span {
+      background: $green-main;
+    }
+  }
+
+  &.expense {
+    background: $red-light;
+    color: $red-hover;
+
+    span {
+      background: $red-main;
+    }
   }
 }
 
@@ -128,10 +146,64 @@ $input-bg: #f8fafc;
   margin-bottom: 1.25rem;
   width: 100%;
 
-  label { 
-    font-size: 0.9rem; 
-    font-weight: 600; 
-    color: $text-main; 
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-main;
+  }
+
+  // 👇 เพิ่มโค้ดส่วนนี้เข้าไป 👇
+  .input-with-addon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 100%;
+      padding: 0.85rem 3.5rem 0.85rem 1rem; // เพิ่ม padding ขวา (3.5rem) เพื่อเว้นที่ให้ตัวหนังสือ THB
+      border-radius: 14px;
+      border: 1px solid $border-color;
+      background: $input-bg;
+      font-size: 1rem;
+      color: $text-main;
+      outline: none;
+      transition: all 0.2s;
+
+      &:focus {
+        background: $white;
+        border-color: $green-main;
+      }
+
+      &.income-input:focus {
+        border-color: $green-main;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+      }
+
+      &.expense-input:focus {
+        border-color: $red-main;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+      }
+
+      // ซ่อนลูกศรขึ้นลงของ input number
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &[type=number] {
+        -moz-appearance: textfield;
+      }
+    }
+
+    .currency-addon {
+      position: absolute;
+      right: 1rem; // ระยะห่างจากขอบขวา
+      color: $text-muted;
+      font-weight: 600;
+      font-size: 0.95rem;
+      pointer-events: none; // ทำให้คลิกทะลุไปโดน input ได้
+    }
   }
 
   input {
@@ -145,19 +217,20 @@ $input-bg: #f8fafc;
     outline: none;
     transition: all 0.2s;
 
-    &:focus { 
-      background: $white; 
+    &:focus {
+      background: $white;
       border-color: $green-main; // Default focus color
     }
-    
+
     // Dynamic Focus Colors
-    &.income-input:focus { 
-      border-color: $green-main; 
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); 
+    &.income-input:focus {
+      border-color: $green-main;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
     }
-    &.expense-input:focus { 
-      border-color: $red-main; 
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); 
+
+    &.expense-input:focus {
+      border-color: $red-main;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
     }
   }
 }
@@ -188,7 +261,9 @@ $input-bg: #f8fafc;
     cursor: pointer;
     transition: all 0.2s;
 
-    &:hover { border-color: #cbd5e1; }
+    &:hover {
+      border-color: #cbd5e1;
+    }
 
     .cat-info {
       display: flex;
@@ -202,18 +277,30 @@ $input-bg: #f8fafc;
       text-overflow: ellipsis;
     }
 
-    .gray-text { color: $text-muted; }
+    .gray-text {
+      color: $text-muted;
+    }
 
     .arrow {
       font-size: 12px;
       color: $text-muted;
       transition: transform 0.3s;
       flex-shrink: 0;
-      &.open { transform: rotate(180deg); }
+
+      &.open {
+        transform: rotate(180deg);
+      }
     }
 
-    &.income-input:focus-within { border-color: $green-main; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
-    &.expense-input:focus-within { border-color: $red-main; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+    &.income-input:focus-within {
+      border-color: $green-main;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+
+    &.expense-input:focus-within {
+      border-color: $red-main;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
   }
 
   .options-list {
@@ -224,16 +311,22 @@ $input-bg: #f8fafc;
     background: $white;
     border: 1px solid $border-color;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 100;
     padding: 8px;
     margin: 0;
     list-style: none;
-    max-height: 220px; 
+    max-height: 220px;
     overflow-y: auto;
 
-    &::-webkit-scrollbar { width: 4px; }
-    &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
 
     li {
       padding: 10px 12px;
@@ -244,8 +337,10 @@ $input-bg: #f8fafc;
       cursor: pointer;
       font-size: 0.95rem;
       transition: background 0.2s;
-      
-      &:hover { background: #f1f5f9; }
+
+      &:hover {
+        background: #f1f5f9;
+      }
 
       .system-tag {
         margin-left: auto;
@@ -257,7 +352,7 @@ $input-bg: #f8fafc;
         color: $text-muted;
       }
     }
-    
+
     .no-data {
       padding: 1rem;
       text-align: center;
@@ -283,8 +378,14 @@ $input-bg: #f8fafc;
     justify-content: center;
     transition: all 0.2s;
 
-    &:hover { filter: brightness(0.95); transform: translateY(-1px); }
-    &:active { transform: translateY(0); }
+    &:hover {
+      filter: brightness(0.95);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 
   .btn-add-cat {
@@ -315,13 +416,30 @@ $input-bg: #f8fafc;
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  &:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); }
-  &:active { transform: translateY(0); }
-  &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-  
-  &.btn-income { background: $green-main; }
-  &.btn-expense { background: $red-main; }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &.btn-income {
+    background: $green-main;
+  }
+
+  &.btn-expense {
+    background: $red-main;
+  }
 }
 
 /* =========================================
@@ -350,19 +468,25 @@ $input-bg: #f8fafc;
   animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
-  h2 { 
-    text-align: center; 
-    font-weight: 800; 
-    margin-bottom: 1.5rem; 
+  h2 {
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
     font-size: 1.25rem;
     color: $text-main;
   }
 
-  &.income-modal { border-top: 6px solid $green-main; }
-  &.expense-modal { border-top: 6px solid $red-main; }
+  &.income-modal {
+    border-top: 6px solid $green-main;
+  }
+
+  &.expense-modal {
+    border-top: 6px solid $red-main;
+  }
 }
 
-.color-dot, .color-indicator {
+.color-dot,
+.color-indicator {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -379,7 +503,7 @@ $input-bg: #f8fafc;
   border-radius: 14px;
   border: 1px solid $border-color;
   margin-bottom: 1.5rem;
-  
+
   .color-picker {
     appearance: none;
     -webkit-appearance: none;
@@ -389,11 +513,21 @@ $input-bg: #f8fafc;
     border-radius: 50%;
     cursor: pointer;
     background: none;
-    box-shadow: 0 0 0 2px $white, 0 0 0 3px #e2e8f0; 
+    box-shadow: 0 0 0 2px $white, 0 0 0 3px #e2e8f0;
 
-    &::-webkit-color-swatch-wrapper { padding: 0; }
-    &::-webkit-color-swatch { border: none; border-radius: 50%; }
-    &::-moz-color-swatch { border: none; border-radius: 50%; }
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
   }
 
   .color-value {
@@ -427,13 +561,24 @@ $input-bg: #f8fafc;
     &.btn-cancel {
       background: $input-bg;
       color: $text-muted;
-      &:hover { background: #e2e8f0; color: $text-main; }
+
+      &:hover {
+        background: #e2e8f0;
+        color: $text-main;
+      }
     }
   }
 }
 
-.income-modal .btn-save { background: $green-main; color: white; }
-.expense-modal .btn-save { background: $red-main; color: white; }
+.income-modal .btn-save {
+  background: $green-main;
+  color: white;
+}
+
+.expense-modal .btn-save {
+  background: $red-main;
+  color: white;
+}
 
 /* --- Manage Category List --- */
 .category-list {
@@ -442,8 +587,14 @@ $input-bg: #f8fafc;
   margin: 1rem 0;
   padding-right: 4px;
 
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+  }
 
   .category-item {
     display: flex;
@@ -454,18 +605,21 @@ $input-bg: #f8fafc;
     border: 1px solid $border-color;
     border-radius: 12px;
     margin-bottom: 8px;
-    
+
     .cat-info {
       display: flex;
       align-items: center;
       gap: 12px;
-      
-      .color-indicator { border-radius: 4px; }
+
+      .color-indicator {
+        border-radius: 4px;
+      }
+
       .cat-name {
         font-size: 0.9rem;
         font-weight: 600;
         color: $text-main;
-        
+
         small {
           background: $input-bg;
           padding: 2px 6px;
@@ -493,21 +647,54 @@ $input-bg: #f8fafc;
         justify-content: center;
         transition: 0.2s;
 
-        &.btn-edit-icon { color: #3b82f6; &:hover { background: #eff6ff; } }
-        &.btn-delete-icon { color: $red-main; &:hover { background: $red-light; } }
+        &.btn-edit-icon {
+          color: #3b82f6;
+
+          &:hover {
+            background: #eff6ff;
+          }
+        }
+
+        &.btn-delete-icon {
+          color: $red-main;
+
+          &:hover {
+            background: $red-light;
+          }
+        }
       }
-      span { font-size: 0.9rem; color: #cbd5e1; width: 32px; text-align: center; }
+
+      span {
+        font-size: 0.9rem;
+        color: #cbd5e1;
+        width: 32px;
+        text-align: center;
+      }
     }
   }
 }
 
 /* Animations */
 @keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }

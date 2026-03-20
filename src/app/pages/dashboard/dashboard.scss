@@ -64,8 +64,7 @@ $orange-main: #f59e0b;
         color: $text-muted;
         font-weight: 500;
         font-size: 0.95rem;
-        margin: 0;
-        margin-top: 10px;
+        margin: 10px 0 0 0;
       }
     }
 
@@ -109,7 +108,8 @@ $orange-main: #f59e0b;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        /* <--- เปลี่ยนจาก center เป็น flex-start */
 
         &:hover {
           transform: translateY(-2px);
@@ -150,6 +150,8 @@ $orange-main: #f59e0b;
         }
 
         &.income {
+          border-bottom: 4px solid $green-main;
+
           .icon-bg {
             background: $green-bg;
             color: $green-main;
@@ -158,11 +160,11 @@ $orange-main: #f59e0b;
           h2 {
             color: $green-main;
           }
-
-          border-bottom: 4px solid $green-main;
         }
 
         &.expense {
+          border-bottom: 4px solid $red-main;
+
           .icon-bg {
             background: $red-bg;
             color: $red-main;
@@ -171,8 +173,6 @@ $orange-main: #f59e0b;
           h2 {
             color: $text-main;
           }
-
-          border-bottom: 4px solid $red-main;
 
           .budget-section {
             margin-top: 1.2rem;
@@ -205,6 +205,8 @@ $orange-main: #f59e0b;
         }
 
         &.balance {
+          border-bottom: 4px solid $blue-main;
+
           .icon-bg {
             background: $blue-bg;
             color: $blue-main;
@@ -213,8 +215,6 @@ $orange-main: #f59e0b;
           h2 {
             color: $blue-main;
           }
-
-          border-bottom: 4px solid $blue-main;
         }
       }
     }
@@ -306,6 +306,8 @@ $orange-main: #f59e0b;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         /* ให้ Scroll บน iOS ลื่นไหล */
+        padding-bottom: 120px;
+        margin-bottom: -120px;
       }
 
       table {
@@ -382,7 +384,7 @@ $orange-main: #f59e0b;
           }
 
           &.expense {
-            color: $text-main;
+            color: $red-main;
           }
         }
       }
@@ -816,8 +818,9 @@ $orange-main: #f59e0b;
 
           h2 {
             font-size: 1.4rem;
-            /* ลดขนาดตัวเลขยอดเงินลง */
           }
+
+          /* ลดขนาดตัวเลขยอดเงินลง */
 
           /* จัดการแถบ Budget เผื่อข้อความยาวจนดันจอ */
           &.expense .budget-section {
@@ -899,9 +902,8 @@ $orange-main: #f59e0b;
       .btn {
         width: 100%;
         text-align: center;
+        /* ปุ่มใน Modal เต็มความกว้าง */
       }
-
-      /* ปุ่มใน Modal เต็มความกว้าง */
     }
   }
 }

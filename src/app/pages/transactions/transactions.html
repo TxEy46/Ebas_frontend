@@ -4,9 +4,16 @@
 
         <div class="content">
             <div class="header-section">
-                <h1>Transactions</h1>
+                <div class="header-titles">
+                    <h1>Transactions</h1>
+                    <p class="subtitle text-muted">
+                        ตรวจสอบและจัดการรายรับ-รายจ่ายของคุณทั้งหมดได้ที่นี่
+                        สามารถกรองข้อมูลตามเดือนเพื่อดูความเคลื่อนไหว หรือแก้ไขรายการต่างๆ
+                        เพื่อให้บัญชีของคุณแม่นยำที่สุด
+                    </p>
+                </div>
                 <div class="filter">
-                    <label for="monthSelect">Filter by Month:</label>
+                    <label for="monthSelect">เลือกเดือน:</label>
                     <div class="select-wrapper">
                         <select id="monthSelect" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()">
                             <option *ngFor="let month of months" [value]="month">{{ month }}</option>
@@ -26,11 +33,11 @@
                             <table class="transactions-table">
                                 <thead>
                                     <tr>
-                                        <th class="name-col">Transaction Name</th>
-                                        <th>Category</th>
-                                        <th class="align-right">Amount</th>
-                                        <th class="align-right">Date</th>
-                                        <th class="align-center">Manage</th>
+                                        <th class="name-col">ชื่อรายการ</th>
+                                        <th>หมวดหมู่</th>
+                                        <th class="align-right">จำนวนเงิน</th>
+                                        <th class="align-right">วันที่ทำรายการ</th>
+                                        <th class="align-center">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,15 +51,15 @@
                                             </div>
                                         </td>
                                         <td class="align-right amount" [ngClass]="tx.type">
-                                            {{ tx.type === 'income' ? '+' : '-' }}฿{{ tx.amount | number:'1.2-2' }}
+                                            {{ tx.type === 'income' ? '+' : '-' }}{{ tx.amount | number:'1.2-2' }} บาท
                                         </td>
-                                        <td class="align-right date-col">{{ tx.createdate | date:'MMM d, yyyy, HH:mm' }}
+                                        <td class="align-right date-col">{{ tx.createdate | date:'d MMM yyyy, HH:mm' }}
                                         </td>
 
                                         <td class="align-center action-col">
                                             <div class="menu-container">
-                                                <button class="btn-icon btn-more" (click)="tx.showMenu = !tx.showMenu"
-                                                    (blur)="tx.showMenu = false">
+                                                <button type="button" class="btn-icon btn-more"
+                                                    (click)="tx.showMenu = !tx.showMenu" (blur)="tx.showMenu = false">
                                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round">
@@ -64,7 +71,7 @@
 
                                                 <div class="action-dropdown" *ngIf="tx.showMenu"
                                                     (mousedown)="$event.preventDefault()">
-                                                    <button class="dropdown-item btn-edit-dropdown"
+                                                    <button type="button" class="dropdown-item btn-edit-dropdown"
                                                         (click)="editTransaction(tx); tx.showMenu = false">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                                             stroke="currentColor" stroke-width="2"
@@ -75,7 +82,7 @@
                                                         </svg>
                                                         <span>แก้ไข</span>
                                                     </button>
-                                                    <button class="dropdown-item btn-delete-dropdown"
+                                                    <button type="button" class="dropdown-item btn-delete-dropdown"
                                                         (click)="deleteTransaction(tx.id); tx.showMenu = false">
                                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                                             stroke="currentColor" stroke-width="2"
@@ -97,22 +104,23 @@
                         </div>
 
                         <div class="pagination" *ngIf="totalFilteredItems > itemsPerPage">
-                            <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
-                            <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                            <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
+                            <button type="button" [disabled]="currentPage === 1" (click)="prevPage()">ก่อนหน้า</button>
+                            <span>หน้า {{ currentPage }} จาก {{ totalPages }}</span>
+                            <button type="button" [disabled]="currentPage === totalPages"
+                                (click)="nextPage()">ถัดไป</button>
                         </div>
                     </ng-container>
                 </ng-container>
 
                 <ng-template #loading>
                     <div class="state-message loading">
-                        <div class="spinner"></div>Loading your transactions...
+                        <div class="spinner"></div>กำลังโหลดข้อมูลรายการ...
                     </div>
                 </ng-template>
 
                 <ng-template #empty>
                     <div class="state-message empty">
-                        <p>No transactions found for this month.</p>
+                        <p>ไม่พบรายการเคลื่อนไหวในเดือนนี้</p>
                     </div>
                 </ng-template>
             </div>
@@ -122,26 +130,26 @@
 
 <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-        <h2>Edit Transaction</h2>
+        <h2>แก้ไขรายการ</h2>
 
         <div class="form-row">
             <div class="form-group">
-                <label>Transaction Name</label>
-                <input type="text" [(ngModel)]="editFormData.name" placeholder="Enter name">
+                <label>ชื่อรายการ</label>
+                <input type="text" [(ngModel)]="editFormData.name" placeholder="เช่น ค่ากาแฟ, เงินเดือน">
             </div>
             <div class="form-group">
-                <label>Amount</label>
+                <label>จำนวนเงิน (บาท)</label>
                 <input type="number" [(ngModel)]="editFormData.amount" placeholder="0.00">
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label>Type</label>
+                <label>ประเภท</label>
                 <div class="select-wrapper">
                     <select [(ngModel)]="editFormData.type" (ngModelChange)="onTypeChange()">
-                        <option value="income">Income (+)</option>
-                        <option value="expense">Expense (-)</option>
+                        <option value="income">รายรับ (+)</option>
+                        <option value="expense">รายจ่าย (-)</option>
                     </select>
                     <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -151,7 +159,7 @@
             </div>
 
             <div class="form-group">
-                <label>Category</label>
+                <label>หมวดหมู่</label>
                 <div class="select-wrapper">
                     <select [(ngModel)]="editFormData.category_id">
                         <option *ngFor="let cat of filteredCategories" [value]="cat.id">{{ cat.name }}</option>
@@ -165,8 +173,8 @@
         </div>
 
         <div class="modal-actions">
-            <button class="btn-cancel" (click)="closeModal()">Cancel</button>
-            <button class="btn-save" (click)="saveEdit()">Save Changes</button>
+            <button type="button" class="btn-cancel" (click)="closeModal()">ยกเลิก</button>
+            <button type="button" class="btn-save" (click)="saveEdit()">บันทึกการเปลี่ยนแปลง</button>
         </div>
     </div>
 </div>

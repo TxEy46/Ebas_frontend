@@ -154,12 +154,34 @@ $hover-bg: #f1f5f9;
     border-radius: 24px;
     border: 1px solid $border-color;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    overflow: visible;
 
     @media (max-width: 768px) {
       border-radius: 16px; // ลดความมนลงนิดหน่อยในมือถือ
-      overflow-x: auto; // ปล่อยให้เลื่อนซ้ายขวาได้
 
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    }
+  }
+
+  /* 👇 เพิ่มบล็อกนี้เข้าไปเพื่อจัดการ Overflow และป้องกันการตัดเมนู */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    /* เทคนิคดันขอบล่างไม่ให้เมนูบรรทัดสุดท้ายโดนตัด */
+    padding-bottom: 150px;
+    margin-bottom: -150px;
+
+    /* จัดการ Scrollbar บนมือถือ (ย้ายมาจาก container) */
+    @media (max-width: 768px) {
       &::-webkit-scrollbar {
         height: 6px;
       }
