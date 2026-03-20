@@ -173,23 +173,18 @@ $hover-bg: #f1f5f9;
   /* 👇 เพิ่มบล็อกนี้เข้าไปเพื่อจัดการ Overflow และป้องกันการตัดเมนู */
   .table-responsive {
     width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    /* จอคอม: ยอมให้เมนูทะลุกรอบตารางออกมาทับคนอื่นได้เลย */
+    overflow: visible;
+    position: relative;
+    z-index: 20;
+    /* 👈 ยกตารางให้อยู่เลเยอร์บนสุด (สูงกว่า Pagination) */
 
-    /* เทคนิคดันขอบล่างไม่ให้เมนูบรรทัดสุดท้ายโดนตัด */
-    padding-bottom: 150px;
-    margin-bottom: -150px;
-
-    /* จัดการ Scrollbar บนมือถือ (ย้ายมาจาก container) */
     @media (max-width: 768px) {
-      &::-webkit-scrollbar {
-        height: 6px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-      }
+      overflow-x: auto;
+      /* มือถือ: ยังต้องเลื่อนซ้ายขวาได้อยู่ */
+      -webkit-overflow-scrolling: touch;
+      /* เผื่อพื้นที่ด้านล่างให้เมนูบรรทัดสุดท้าย (ลบ margin ติดลบทิ้งไปเลย ปุ่มจะได้ไม่โดนบัง) */
+      padding-bottom: 110px;
     }
   }
 
@@ -367,12 +362,11 @@ $hover-bg: #f1f5f9;
   /* --- Pagination --- */
   .pagination {
     position: relative;
-    /* 👈 เพิ่มบรรทัดนี้ */
     z-index: 10;
-    /* 👈 เพิ่มบรรทัดนี้ เพื่อยกให้ปุ่มอยู่เหนือตาราง */
-
+    /* 👈 ลดเลเยอร์ให้อยู่ต่ำกว่าตาราง เมนูสามจุดจะได้กางทับได้ */
     display: flex;
     justify-content: center;
+    /* จัดให้อยู่ชิดขวาในจอคอม */
     align-items: center;
     gap: 16px;
     margin-top: 1.5rem;
@@ -380,7 +374,10 @@ $hover-bg: #f1f5f9;
     padding: 0;
 
     @media (max-width: 768px) {
-      justify-content: center; // มือถือให้อยู่ตรงกลาง
+      justify-content: center;
+      /* มือถือให้อยู่ตรงกลาง */
+      margin-top: 0.5rem;
+      /* ขยับขึ้นมานิดนึงไม่ให้ห่างตารางเกินไป */
     }
 
     button {
