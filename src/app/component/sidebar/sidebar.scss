@@ -1,3 +1,6 @@
+/* =========================================
+   🎨 VARIABLES (ห้ามลบส่วนนี้นะครับ)
+   ========================================= */
 $text-main: #0f172a;
 $text-muted: #64748b;
 $green-main: #10b981;
@@ -8,8 +11,10 @@ $hover-bg: #f8fafc;
 $white: #ffffff;
 $border-color: #e2e8f0;
 
+/* =========================================
+   🖥️ SIDEBAR STYLES
+   ========================================= */
 .sidebar {
-  /* 📌 ความกว้างแบบเพรียวบาง 220px */
   width: 220px; 
   height: 100vh;
   padding: 2rem 1rem;
@@ -20,18 +25,13 @@ $border-color: #e2e8f0;
   border-right: 1px solid $border-color;
   position: sticky;
   top: 0;
-  
-  /* 📌 ลอยเหนือเนื้อหา ปุ่มจะได้ไม่มุดหายไปใต้ตาราง */
   z-index: 50; 
-  
-  /* 📌 ไม่มี overflow: hidden; ที่ตรงนี้แล้ว ปุ่มจะได้โผล่ออกมาเต็มๆ */
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
 
-  /* ปุ่มกดสลับย่อ/ขยาย */
   .toggle-btn {
     position: absolute;
     top: 2rem;
-    right: -14px; /* คร่อมเส้นขอบได้เต็มที่ */
+    right: -14px;
     width: 28px;
     height: 28px;
     background: $white;
@@ -63,7 +63,6 @@ $border-color: #e2e8f0;
     margin-bottom: 2.5rem;
     display: flex;
     align-items: center;
-    /* 📌 ป้องกันโลโก้ทะลุตอนหด */
     overflow: hidden; 
 
     .logo {
@@ -108,8 +107,6 @@ $border-color: #e2e8f0;
         border-radius: 12px;
         position: relative;
         transition: all 0.25s ease;
-        
-        /* 📌 ป้องกันข้อความทะลุตอนย่อ Sidebar */
         white-space: nowrap; 
         overflow: hidden; 
 
@@ -164,7 +161,6 @@ $border-color: #e2e8f0;
     }
   }
 
-  /* 📌 สไตล์เมื่อ Sidebar อยู่ในโหมดหด (Collapsed) */
   &.collapsed {
     width: 80px; 
     padding-left: 0.8rem;
@@ -198,7 +194,6 @@ $border-color: #e2e8f0;
    📱 MOBILE BOTTOM NAVIGATION
    ========================================= */
 @media (max-width: 768px) {
-  /* บังคับลบผลของ class .collapsed ในมือถือทิ้งไป */
   .sidebar, .sidebar.collapsed {
     width: 100%;
     height: 70px;
@@ -210,40 +205,35 @@ $border-color: #e2e8f0;
     left: 0;
     border-right: none;
     border-top: 1px solid $border-color;
-    border-radius: 20px 20px 0 0; /* ทำมุมมนด้านบนนิดๆ ให้ดู Premium */
+    border-radius: 20px 20px 0 0; 
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
     background: $white;
     z-index: 1000;
 
-    /* ซ่อนปุ่ม Toggle และ Logo บนมือถือ */
     .toggle-btn, .logo-container {
       display: none;
     }
 
     .nav-links {
       flex-direction: row;
-      justify-content: space-between; /* กระจายปุ่มให้ห่างเท่าๆ กัน */
+      justify-content: space-between; 
       align-items: center;
       width: 100%;
-      padding: 0 1.5rem; /* ระยะห่างขอบซ้ายขวา */
+      padding: 0 1.5rem; 
 
       li {
         display: flex;
         justify-content: center;
 
         a {
-          flex-direction: row; /* จัดไอคอนกับข้อความให้อยู่แนวนอน */
+          flex-direction: row; 
           padding: 0.6rem;
           border-radius: 20px;
           gap: 0.4rem;
           background: transparent;
 
-          /* ซ่อนขีดสีเขียวด้านซ้ายของ Desktop */
-          &::before {
-            display: none;
-          }
+          &::before { display: none; }
 
-          /* ซ่อนข้อความไว้ก่อน */
           .text {
             display: none;
             width: auto;
@@ -253,20 +243,18 @@ $border-color: #e2e8f0;
             font-weight: 700;
           }
 
-          /* 🌟 ลูกเล่น: เมื่อปุ่มถูกเลือก (Active) ให้แสดงข้อความ */
           &.active {
             background: $green-light;
-            padding: 0.6rem 1rem; /* ยืดปุ่มออก */
+            padding: 0.6rem 1rem; 
             
             .text {
-              display: block; /* โชว์ข้อความ */
+              display: block; 
               animation: fadeIn 0.3s ease;
             }
           }
         }
       }
 
-      /* จัดการปุ่ม Logout ให้อยู่ในแถวเดียวกัน */
       .logout-item {
         margin-top: 0; 
         
@@ -282,8 +270,114 @@ $border-color: #e2e8f0;
   }
 }
 
-/* อนิเมชั่นตอนข้อความโผล่ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateX(-5px); }
   to { opacity: 1; transform: translateX(0); }
+}
+
+/* =========================================
+   🌟 CUSTOM LOGOUT MODAL STYLES
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4); 
+  backdrop-filter: blur(4px); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; 
+  animation: fadeInModal 0.2s ease-out forwards;
+
+  .modal-box {
+    background: $white; /* เรียกใช้ตัวแปรได้แล้ว */
+    width: 90%;
+    max-width: 400px; 
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: scaleUp 0.2s ease-out forwards;
+
+    .icon-wrapper {
+      width: 70px;
+      height: 70px;
+      background: $green-light;
+      color: $green-main;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem auto;
+
+      svg { margin-left: 4px; }
+    }
+
+    .modal-title {
+      color: $text-main;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .modal-desc {
+      color: $text-muted;
+      font-size: 0.95rem;
+      margin: 0 0 2rem 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      button {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .btn-cancel {
+        background: transparent;
+        border: 1.5px solid $border-color;
+        color: $text-muted;
+
+        &:hover {
+          background: $hover-bg;
+          color: $text-main;
+          border-color: #cbd5e1;
+        }
+      }
+
+      .btn-confirm {
+        background: $green-main;
+        border: 1.5px solid $green-main;
+        color: $white;
+
+        &:hover {
+          background: #059669; 
+          border-color: #059669;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

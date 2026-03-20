@@ -11,6 +11,9 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class SidebarComponent {
   isCollapsed = false;
+  
+  // 🌟 เพิ่มตัวแปรเช็คสถานะการเปิด/ปิด Modal
+  isLogoutModalOpen = false;
 
   constructor(private router: Router) { }
 
@@ -18,17 +21,27 @@ export class SidebarComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  onLogout() {
-    // 1. 🛑 สำคัญมาก: ต้องลบข้อมูล user ออกจาก localStorage
-    localStorage.clear()
+  // ฟังก์ชันเปิด Modal
+  openLogoutModal() {
+    this.isLogoutModalOpen = true;
+  }
 
-    // ถ้ามีการเก็บ token หรือข้อมูลอื่นๆ ให้ล้างออกให้หมด
-    // localStorage.clear(); // หรือจะใช้คำสั่งนี้เพื่อล้างทั้งหมดในทีเดียวก็ได้
+  // ฟังก์ชันปิด Modal
+  closeLogoutModal() {
+    this.isLogoutModalOpen = false;
+  }
 
-    // 2. ดีดผู้ใช้ออกไปหน้า Login
-    // Note: เมื่อไม่มี 'user' ใน localStorage แล้ว Auth Guard จะยอมให้เราอยู่ที่หน้า Login
+  // ฟังก์ชันเมื่อกดยืนยันออกจากระบบในหน้า Modal
+  confirmLogout() {
+    // 1. ปิด Modal ก่อน
+    this.isLogoutModalOpen = false;
+
+    // 2. เคลียร์ข้อมูลใน localStorage
+    localStorage.clear();
+
+    // 3. นำทางกลับไปหน้า Login
     this.router.navigate(['/login']).then(() => {
-      // 3. (ทางเลือก) สั่ง Reload เพื่อเคลียร์ State ค้างคาใน Memory ของ Angular
+      // 4. (ทางเลือก) สั่งรีเฟรช 1 ครั้งเพื่อเคลียร์ State ทั้งหมด
       window.location.reload();
     });
 
