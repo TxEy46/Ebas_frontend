@@ -58,7 +58,7 @@ $hover-bg: #f1f5f9;
   // 📱 Mobile Adjustments สำหรับหน้าที่มีตาราง
   @media (max-width: 768px) {
     padding: 1.5rem 1rem;
-    padding-bottom: 130px; /* 👈 2. แก้จาก 90px เป็น 130px (หรือมากกว่านี้ถ้า Bottom Nav ของคุณสูงมาก) */
+    padding-bottom: 150px; /* 👈 2. แก้จาก 90px เป็น 130px (หรือมากกว่านี้ถ้า Bottom Nav ของคุณสูงมาก) */
   }
 
   /* --- Header & Filters --- */
