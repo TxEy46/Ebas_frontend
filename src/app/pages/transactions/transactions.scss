@@ -18,16 +18,19 @@ $hover-bg: #f1f5f9;
 }
 
 .page-layout {
-  min-height: 100vh;
+  height: 100vh; /* ล็อคความสูงจอนอกสุด */
   background-color: $app-bg;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: $text-main;
+  overflow: hidden; /* ไม่ให้จอนอกสุดขยับ */
 }
 
 .layout {
   display: flex;
   width: 100%;
+  height: 100%;
   max-width: 100%;
+  /* ❌ ลบ @media (max-width: 768px) ที่มี flex-direction: column ออกไปเลยครับ */
 }
 
 .sidebar {
@@ -36,6 +39,10 @@ $hover-bg: #f1f5f9;
 
 .content {
   flex: 1;
+  height: 100%; /* ให้ความสูงเต็มพื้นที่ที่เหลือ */
+  overflow-y: auto; /* ให้เลื่อนเฉพาะเนื้อหาข้างใน */
+  -webkit-overflow-scrolling: touch; /* ให้ iPhone เลื่อนลื่นๆ */
+  
   min-width: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2rem 3rem;

@@ -1,3 +1,12 @@
+/* =========================================
+   📌 ส่วนที่ 1: ตั้งค่า Host ให้เต็มจอ (แก้ปัญหา Chrome เลื่อนทั้งหน้า)
+   ========================================= */
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Variables */
 $app-bg: #f8fafc;
 $text-main: #0f172a;
@@ -15,24 +24,29 @@ $orange-main: #f59e0b;
 
 .dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100dvh; /* 📌 เปลี่ยนจาก min-height เป็น height แบบ dvh เพื่อล็อคหน้าจอให้พอดีเป๊ะ */
+  width: 100%;
+  overflow: hidden; /* 📌 ล็อคไม่ให้ Chrome สไลด์ดิ้นได้ */
   font-family: 'Inter', -apple-system, sans-serif;
   background-color: $app-bg;
   color: $text-main;
 
   .sidebar {
     flex-shrink: 0;
+    height: 100%;
   }
 
   .dashboard-content {
     flex: 1;
     min-width: 0;
-    padding: 2rem 3rem;
+    height: 100%; /* 📌 ให้เนื้อหาสูงเต็มพื้นที่ที่เหลือ */
+    padding: 2rem 3rem 4rem 3rem; /* 📌 เพิ่ม padding ด้านล่างให้มีพื้นที่หายใจ เลื่อนสุดได้ชัวร์ */
     max-width: 1400px;
     margin: 0 auto;
-    overflow-y: auto;
+    overflow-y: auto; /* 📌 ให้เลื่อนสกอร์บาร์ได้เฉพาะตรงนี้ */
     overflow-x: hidden;
-    /* ป้องกันแนวนอนทะลุ */
+    box-sizing: border-box; /* 📌 ป้องกันแพดดิ้งดันจอทะลุ */
+    scroll-behavior: smooth;
 
     .header-section {
       margin-bottom: 2rem;
@@ -109,7 +123,6 @@ $orange-main: #f59e0b;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        /* <--- เปลี่ยนจาก center เป็น flex-start */
 
         &:hover {
           transform: translateY(-2px);
@@ -305,15 +318,12 @@ $orange-main: #f59e0b;
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        /* ให้ Scroll บน iOS ลื่นไหล */
-        padding-bottom: 120px;
-        margin-bottom: -120px;
+        /* 📌 ลบ margin-bottom ลบ 120px ที่ทำให้ตารางลอยหายไปทิ้งแล้วครับ! */
       }
 
       table {
         width: 100%;
         min-width: 600px;
-        /* บังคับความกว้างขั้นต่ำ เพื่อไม่ให้เบียดกันเกินไป */
         border-collapse: collapse;
         font-size: 0.95rem;
 
@@ -721,7 +731,6 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -733,7 +742,6 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -745,7 +753,6 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -764,16 +771,26 @@ $orange-main: #f59e0b;
 }
 
 /* Mobile Devices (Phones) */
+/* Mobile Devices (Phones) */
 @media(max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
 
-    .dashboard-content {
-      padding: 1rem;
-      padding-bottom: 90px;
+    /* 📌 จุดที่ต้องเพิ่ม: บังคับให้ Sidebar (เมนู) ในมือถือไม่สูง 100% */
+    .sidebar {
+      height: auto; 
       width: 100%;
+    }
+
+    .dashboard-content {
+      /* 📌 เว้นพื้นที่ด้านล่างเผื่อแถบเมนู ให้สามารถไถสุดได้ชัวร์ๆ ไม่โดนบัง */
+      padding: 1.5rem 1rem 120px 1rem; 
+      
+      width: 100%;
+      height: auto; /* 📌 เปลี่ยนจาก 100% เป็น auto เพื่อไม่ให้ล้น */
+      flex: 1; /* ให้ใช้พื้นที่ที่เหลือจาก Sidebar */
+      overflow-y: auto;
       box-sizing: border-box;
-      /* ป้องกันหน้าจอรวมหลุดขอบ */
 
       .header-section {
         margin-bottom: 1.5rem;
@@ -783,12 +800,8 @@ $orange-main: #f59e0b;
         }
       }
 
-      /* -------------------------------------
-         แก้ปัญหา Card หลุดขอบบนมือถือ
-      ------------------------------------- */
       .summary {
         display: flex;
-        /* ใช้ Flex Column คุมความกว้างได้เด็ดขาดกว่า Grid บนมือถือ */
         flex-direction: column;
         gap: 1rem;
         width: 100%;
@@ -796,9 +809,7 @@ $orange-main: #f59e0b;
         .card {
           width: 100%;
           padding: 1rem;
-          /* ลด Padding ด้านในไม่ให้กินที่ */
           box-sizing: border-box;
-          /* สำคัญมาก: ป้องกันไม่ให้ Padding ดันกล่องทะลุจอ */
 
           .card-header {
             margin-bottom: 0.8rem;
@@ -806,8 +817,6 @@ $orange-main: #f59e0b;
             p {
               font-size: 0.8rem;
             }
-
-            /* ลดฟอนต์หัวข้อ Income/Expense */
 
             .icon-bg {
               width: 28px;
@@ -820,16 +829,12 @@ $orange-main: #f59e0b;
             font-size: 1.4rem;
           }
 
-          /* ลดขนาดตัวเลขยอดเงินลง */
-
-          /* จัดการแถบ Budget เผื่อข้อความยาวจนดันจอ */
           &.expense .budget-section {
             margin-top: 1rem;
             padding-top: 0.8rem;
 
             .budget-labels {
               flex-wrap: wrap;
-              /* ถ้าจอมือถือเล็กมาก บังคับให้ข้อความปัดตกบรรทัดอัตโนมัติ */
               gap: 8px;
             }
           }
@@ -845,7 +850,6 @@ $orange-main: #f59e0b;
 
           .canvas-container {
             height: 240px;
-            /* ลดความสูงของกราฟบนมือถือ */
           }
         }
       }
@@ -855,7 +859,6 @@ $orange-main: #f59e0b;
 
         .table-header {
           flex-direction: row;
-          /* จัดหัวข้อกับปุ่ม View All ให้อยู่บรรทัดเดียวกัน */
           margin-bottom: 1rem;
 
           h3 {
@@ -868,17 +871,13 @@ $orange-main: #f59e0b;
           }
         }
 
-        /* จัดการ Table ให้เลื่อนซ้ายขวาได้เนียนๆ บนมือถือ */
         .table-responsive {
           margin: 0 -1rem;
-          /* ดันขอบออกไปติดหน้าจอ */
           padding: 0 1rem;
-          /* เว้นระยะเนื้อหาไว้เหมือนเดิม */
           padding-bottom: 0.5rem;
         }
 
         table {
-
           th,
           td {
             padding: 0.8rem 0.5rem;
@@ -888,7 +887,6 @@ $orange-main: #f59e0b;
     }
   }
 
-  /* ปรับ Modal สำหรับมือถือ */
   .modal-overlay .modal-content {
     padding: 1.5rem;
 
@@ -902,7 +900,6 @@ $orange-main: #f59e0b;
       .btn {
         width: 100%;
         text-align: center;
-        /* ปุ่มใน Modal เต็มความกว้าง */
       }
     }
   }
