@@ -24,9 +24,11 @@ $orange-main: #f59e0b;
 
 .dashboard-layout {
   display: flex;
-  height: 100dvh; /* 📌 เปลี่ยนจาก min-height เป็น height แบบ dvh เพื่อล็อคหน้าจอให้พอดีเป๊ะ */
+  height: 100dvh;
+  /* 📌 เปลี่ยนจาก min-height เป็น height แบบ dvh เพื่อล็อคหน้าจอให้พอดีเป๊ะ */
   width: 100%;
-  overflow: hidden; /* 📌 ล็อคไม่ให้ Chrome สไลด์ดิ้นได้ */
+  overflow: hidden;
+  /* 📌 ล็อคไม่ให้ Chrome สไลด์ดิ้นได้ */
   font-family: 'Inter', -apple-system, sans-serif;
   background-color: $app-bg;
   color: $text-main;
@@ -39,14 +41,21 @@ $orange-main: #f59e0b;
   .dashboard-content {
     flex: 1;
     min-width: 0;
-    height: 100%; /* 📌 ให้เนื้อหาสูงเต็มพื้นที่ที่เหลือ */
-    padding: 2rem 3rem 4rem 3rem; /* 📌 เพิ่ม padding ด้านล่างให้มีพื้นที่หายใจ เลื่อนสุดได้ชัวร์ */
-    max-width: 1400px;
-    margin: 0 auto;
-    overflow-y: auto; /* 📌 ให้เลื่อนสกอร์บาร์ได้เฉพาะตรงนี้ */
+    height: 100%;
+    /* 📌 ให้เนื้อหาสูงเต็มพื้นที่ที่เหลือ */
+    padding: 2rem 3rem 4rem 3rem;
+    overflow-y: auto;
+    /* 📌 ให้เลื่อนสกอร์บาร์ได้เฉพาะตรงนี้ */
     overflow-x: hidden;
-    box-sizing: border-box; /* 📌 ป้องกันแพดดิ้งดันจอทะลุ */
+    box-sizing: border-box;
+    /* 📌 ป้องกันแพดดิ้งดันจอทะลุ */
     scroll-behavior: smooth;
+
+    >* {
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     .header-section {
       margin-bottom: 2rem;
@@ -238,6 +247,8 @@ $orange-main: #f59e0b;
       grid-template-columns: 2fr 1fr;
       gap: 1.5rem;
       margin-bottom: 2rem;
+      width: 100%;
+      /* ✅ เพิ่มความชัวร์ให้กว้างเต็มพื้นที่พอดี */
 
       .chart-card {
         background: $white;
@@ -245,6 +256,11 @@ $orange-main: #f59e0b;
         border: 1px solid $border-color;
         padding: 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+
+        /* 🛑 3 บรรทัดนี้สำคัญมากสำหรับการแก้ปัญหากราฟทะลุขอบ */
+        min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
 
         h3 {
           margin: 0 0 1.5rem 0;
@@ -257,6 +273,7 @@ $orange-main: #f59e0b;
           position: relative;
           height: 280px;
           width: 100%;
+          /* ✅ ไม่ต้องแก้ ปล่อยไว้เหมือนเดิม */
         }
       }
     }
@@ -731,6 +748,7 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -742,6 +760,7 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -753,6 +772,7 @@ $orange-main: #f59e0b;
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -771,24 +791,25 @@ $orange-main: #f59e0b;
 }
 
 /* Mobile Devices (Phones) */
-/* Mobile Devices (Phones) */
 @media(max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
 
     /* 📌 จุดที่ต้องเพิ่ม: บังคับให้ Sidebar (เมนู) ในมือถือไม่สูง 100% */
     .sidebar {
-      height: auto; 
+      height: auto;
       width: 100%;
     }
 
     .dashboard-content {
       /* 📌 เว้นพื้นที่ด้านล่างเผื่อแถบเมนู ให้สามารถไถสุดได้ชัวร์ๆ ไม่โดนบัง */
-      padding: 1.5rem 1rem 120px 1rem; 
-      
+      padding: 1.5rem 1rem 120px 1rem;
+
       width: 100%;
-      height: auto; /* 📌 เปลี่ยนจาก 100% เป็น auto เพื่อไม่ให้ล้น */
-      flex: 1; /* ให้ใช้พื้นที่ที่เหลือจาก Sidebar */
+      height: 100%;
+      /* 📌 เปลี่ยนจาก 100% เป็น auto เพื่อไม่ให้ล้น */
+      flex: 1;
+      /* ให้ใช้พื้นที่ที่เหลือจาก Sidebar */
       overflow-y: auto;
       box-sizing: border-box;
 
@@ -878,6 +899,7 @@ $orange-main: #f59e0b;
         }
 
         table {
+
           th,
           td {
             padding: 0.8rem 0.5rem;
