@@ -366,8 +366,13 @@ $hover-bg: #f1f5f9;
 
   /* --- Pagination --- */
   .pagination {
+    position: relative;
+    /* 👈 เพิ่มบรรทัดนี้ */
+    z-index: 10;
+    /* 👈 เพิ่มบรรทัดนี้ เพื่อยกให้ปุ่มอยู่เหนือตาราง */
+
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     gap: 16px;
     margin-top: 1.5rem;
