@@ -29,7 +29,6 @@ $orange-main: #f59e0b;
   width: 100%;
   overflow: hidden;
   /* 📌 ล็อคไม่ให้ Chrome สไลด์ดิ้นได้ */
-  font-family: 'Inter', -apple-system, sans-serif;
   background-color: $app-bg;
   color: $text-main;
 
@@ -50,6 +49,7 @@ $orange-main: #f59e0b;
     box-sizing: border-box;
     /* 📌 ป้องกันแพดดิ้งดันจอทะลุ */
     scroll-behavior: smooth;
+    font-family: 'Inter', -apple-system, sans-serif;
 
     >* {
       max-width: 1400px;

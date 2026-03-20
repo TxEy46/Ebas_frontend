@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; // เพิ่ม OnInit
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
@@ -9,42 +9,37 @@ import { RouterModule, Router } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   isCollapsed = false;
-  
-  // 🌟 เพิ่มตัวแปรเช็คสถานะการเปิด/ปิด Modal
+  isInitialLoad = true; // ✨ สำหรับปิด animation ตอนเข้าหน้าครั้งแรก
   isLogoutModalOpen = false;
 
   constructor(private router: Router) { }
 
+  ngOnInit() {
+    // 1. ดึงสถานะที่บันทึกไว้
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    this.isCollapsed = savedState === 'true';
+
+    // 2. ปิดโหมด 'หน้าแรก' หลังจาก Render เสร็จ (100ms) เพื่อให้กด Toggle ปกติมี animation
+    setTimeout(() => {
+      this.isInitialLoad = false;
+    }, 100);
+  }
+
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+    localStorage.setItem('sidebarCollapsed', this.isCollapsed.toString());
   }
 
-  // ฟังก์ชันเปิด Modal
-  openLogoutModal() {
-    this.isLogoutModalOpen = true;
-  }
+  openLogoutModal() { this.isLogoutModalOpen = true; }
+  closeLogoutModal() { this.isLogoutModalOpen = false; }
 
-  // ฟังก์ชันปิด Modal
-  closeLogoutModal() {
-    this.isLogoutModalOpen = false;
-  }
-
-  // ฟังก์ชันเมื่อกดยืนยันออกจากระบบในหน้า Modal
   confirmLogout() {
-    // 1. ปิด Modal ก่อน
     this.isLogoutModalOpen = false;
-
-    // 2. เคลียร์ข้อมูลใน localStorage
     localStorage.clear();
-
-    // 3. นำทางกลับไปหน้า Login
     this.router.navigate(['/login']).then(() => {
-      // 4. (ทางเลือก) สั่งรีเฟรช 1 ครั้งเพื่อเคลียร์ State ทั้งหมด
       window.location.reload();
     });
-
-    console.log('User logged out successfully');
   }
 }

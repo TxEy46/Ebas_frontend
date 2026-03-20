@@ -1,5 +1,5 @@
 /* =========================================
-   🎨 VARIABLES (ห้ามลบส่วนนี้นะครับ)
+   🎨 VARIABLES
    ========================================= */
 $text-main: #0f172a;
 $text-muted: #64748b;
@@ -11,33 +11,13 @@ $hover-bg: #f8fafc;
 $white: #ffffff;
 $border-color: #e2e8f0;
 
+/* จังหวะการเคลื่อนที่ที่นุ่มนวลที่สุด */
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 /* =========================================
    🖥️ SIDEBAR STYLES
    ========================================= */
 .sidebar {
-  width: 220px;
-  height: 100vh;
-  height: 100dvh;
-  padding: 2rem 1rem;
-
-  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
-
-  .nav-menu {
-    flex: 1;
-    /* ดันเมนูอื่นๆ ให้กินที่ไป เพื่อให้ Logout ตกไปอยู่ล่างสุด */
-    overflow-y: auto;
-  }
-
-  .logout-button {
-    margin-top: auto;
-    /* ดันปุ่ม Logout ลงล่างสุดเสมอ */
-    flex-shrink: 0;
-    /* ห้ามปุ่มโดนบีบจนแบน */
-
-    /* กรณี iPad ถ้าปุ่มยังชิดขีดดำเกินไป ให้เพิ่ม margin-bottom อีกนิด */
-    margin-bottom: 0.5rem;
-  }
-
   display: flex;
   flex-direction: column;
   background: $white;
@@ -45,9 +25,32 @@ $border-color: #e2e8f0;
   position: sticky;
   top: 0;
   z-index: 50;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-  padding 0.3s ease;
+  
+  /* 🔒 LOCK FONT: บังคับใช้ Inter ทั่วทั้ง Sidebar ไม่ให้ Dashboard มาเปลี่ยน */
+  font-family: 'Inter', sans-serif !important;
 
+  /* กำหนดขนาดเริ่มต้น */
+  width: 220px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 2rem 1rem;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+
+  /* ✨ หัวใจสำคัญ: ควบคุมการเคลื่อนที่ให้สมูท */
+  transition: width $transition-smooth, 
+              padding $transition-smooth;
+  will-change: width, padding;
+
+  /* 🚫 ปิด Animation ทันทีถ้าโหลดหน้าแรก (แก้ปัญหาวูบวาบ) */
+  &.no-transition {
+    transition: none !important;
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  // --- Toggle Button ---
   .toggle-btn {
     position: absolute;
     top: 2rem;
@@ -74,10 +77,11 @@ $border-color: #e2e8f0;
     svg {
       width: 14px;
       height: 14px;
-      transition: transform 0.3s ease;
+      transition: transform $transition-smooth;
     }
   }
 
+  // --- Logo Container ---
   .logo-container {
     padding: 0 0.5rem;
     margin-bottom: 2.5rem;
@@ -89,7 +93,8 @@ $border-color: #e2e8f0;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1.35rem;
+      /* 🔒 LOCK SIZE: ขนาด Logo คงที่ทุกหน้า */
+      font-size: 20px !important; 
       font-weight: 800;
       margin: 0;
       color: $text-main;
@@ -102,17 +107,16 @@ $border-color: #e2e8f0;
         height: 30px !important;
       }
 
-      .highlight {
-        color: $green-main;
-      }
+      .highlight { color: $green-main; }
 
       .text {
-        transition: opacity 0.2s ease, width 0.2s ease;
+        transition: opacity 0.2s ease;
         opacity: 1;
       }
     }
   }
 
+  // --- Navigation Links ---
   .nav-links {
     list-style: none;
     padding: 0;
@@ -121,6 +125,7 @@ $border-color: #e2e8f0;
     flex-direction: column;
     gap: 0.5rem;
     flex: 1;
+    overflow-y: auto;
 
     li {
       a {
@@ -130,7 +135,6 @@ $border-color: #e2e8f0;
         color: $text-muted;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.9rem;
         padding: 0.75rem 0.85rem;
         border-radius: 12px;
         position: relative;
@@ -140,10 +144,15 @@ $border-color: #e2e8f0;
 
         svg {
           flex-shrink: 0;
-          transition: transform 0.2s ease;
+          transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .text {
+          /* 🔒 LOCK SIZE & FONT: บังคับขนาด 14px และ Inter ทุกหน้า */
+          font-size: 14px !important;
+          font-family: 'Inter', sans-serif !important;
+          line-height: 1.5;
+          
           transition: opacity 0.2s ease;
           opacity: 1;
         }
@@ -151,7 +160,6 @@ $border-color: #e2e8f0;
         &:hover {
           color: $text-main;
           background: $hover-bg;
-
           svg {
             transform: scale(1.1);
             color: $green-main;
@@ -173,55 +181,43 @@ $border-color: #e2e8f0;
             height: 60%;
             background-color: $green-main;
             border-radius: 0 4px 4px 0;
+            transition: height $transition-smooth;
           }
-
-          svg {
-            color: $green-main;
-          }
+          svg { color: $green-main; }
         }
       }
     }
 
     .logout-item {
       margin-top: auto;
+      padding-top: 1rem;
 
       .logout-link {
         color: $red-main;
-
         &:hover {
           background: $red-light;
           color: #dc2626;
-
-          svg {
-            color: #dc2626;
-            transform: translateX(3px);
-          }
-        }
-
-        &.active::before {
-          display: none;
+          svg { transform: translateX(3px); }
         }
       }
     }
   }
 
+  /* =========================================
+     🌑 COLLAPSED STATE (Desktop)
+     ========================================= */
   &.collapsed {
     width: 80px;
     padding-left: 0.8rem;
     padding-right: 0.8rem;
 
-    .toggle-btn {
-      right: -14px;
-
-      svg {
-        transform: rotate(180deg);
-      }
+    .toggle-btn svg {
+      transform: rotate(180deg);
     }
 
     .logo-container {
       justify-content: center;
       padding: 0;
-
       .text {
         opacity: 0;
         width: 0;
@@ -247,13 +243,11 @@ $border-color: #e2e8f0;
 }
 
 /* =========================================
-   📱 MOBILE BOTTOM NAVIGATION
+   📱 MOBILE BOTTOM NAVIGATION (Max-width: 768px)
    ========================================= */
 @media (max-width: 768px) {
-
-  .sidebar,
-  .sidebar.collapsed {
-    width: 100%;
+  .sidebar, .sidebar.collapsed {
+    width: 100% !important;
     height: 70px;
     padding: 0;
     flex-direction: row;
@@ -267,9 +261,9 @@ $border-color: #e2e8f0;
     box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
     background: $white;
     z-index: 1000;
+    transition: none;
 
-    .toggle-btn,
-    .logo-container {
+    .toggle-btn, .logo-container {
       display: none;
     }
 
@@ -279,37 +273,31 @@ $border-color: #e2e8f0;
       align-items: center;
       width: 100%;
       padding: 0 1.5rem;
+      overflow: visible;
 
       li {
+        flex: 1;
         display: flex;
         justify-content: center;
 
         a {
-          flex-direction: row;
           padding: 0.6rem;
-          border-radius: 20px;
           gap: 0.4rem;
           background: transparent;
 
-          &::before {
-            display: none;
-          }
+          &::before { display: none; }
 
           .text {
-            display: none;
-            width: auto;
-            opacity: 1;
-            visibility: visible;
-            font-size: 0.85rem;
-            font-weight: 700;
+            display: none; 
           }
 
           &.active {
             background: $green-light;
             padding: 0.6rem 1rem;
-
+            border-radius: 20px;
             .text {
               display: block;
+              font-size: 13px !important; // ปรับเล็กน้อยบนมือถือ
               animation: fadeIn 0.3s ease;
             }
           }
@@ -318,149 +306,16 @@ $border-color: #e2e8f0;
 
       .logout-item {
         margin-top: 0;
-
-        .logout-link {
-          padding: 0.6rem;
-
-          &:hover {
-            background: $red-light;
-          }
-        }
+        padding-top: 0;
       }
     }
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 
 /* =========================================
-   🌟 CUSTOM LOGOUT MODAL STYLES
+   ✨ ANIMATIONS
    ========================================= */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeInModal 0.2s ease-out forwards;
-
-  .modal-box {
-    background: $white;
-    /* เรียกใช้ตัวแปรได้แล้ว */
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    animation: scaleUp 0.2s ease-out forwards;
-
-    .icon-wrapper {
-      width: 70px;
-      height: 70px;
-      background: $green-light;
-      color: $green-main;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.25rem auto;
-
-      svg {
-        margin-left: 4px;
-      }
-    }
-
-    .modal-title {
-      color: $text-main;
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .modal-desc {
-      color: $text-muted;
-      font-size: 0.95rem;
-      margin: 0 0 2rem 0;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-
-      button {
-        flex: 1;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-
-      .btn-cancel {
-        background: transparent;
-        border: 1.5px solid $border-color;
-        color: $text-muted;
-
-        &:hover {
-          background: $hover-bg;
-          color: $text-main;
-          border-color: #cbd5e1;
-        }
-      }
-
-      .btn-confirm {
-        background: $green-main;
-        border: 1.5px solid $green-main;
-        color: $white;
-
-        &:hover {
-          background: #059669;
-          border-color: #059669;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
-        }
-      }
-    }
-  }
-}
-
-@keyframes fadeInModal {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleUp {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-5px); }
+  to { opacity: 1; transform: translateX(0); }
 }
