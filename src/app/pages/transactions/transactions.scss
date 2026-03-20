@@ -233,7 +233,7 @@ $hover-bg: #f1f5f9;
     z-index: 20;
     /* 👈 ยกตารางให้อยู่เลเยอร์บนสุด (สูงกว่า Pagination) */
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       overflow-x: auto;
       /* มือถือ: ยังต้องเลื่อนซ้ายขวาได้อยู่ */
       -webkit-overflow-scrolling: touch;

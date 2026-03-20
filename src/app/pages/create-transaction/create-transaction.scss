@@ -20,51 +20,62 @@ $input-bg: #f8fafc;
 /* --- Layout --- */
 .app-fullscreen {
   width: 100%;
-  min-height: 100vh;
+  height: 100dvh;
+  /* ล็อคความสูงหน้าจอให้พอดีเป๊ะ */
   display: flex;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: $app-bg;
 
-  .main {
-    flex: 1;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
+  /* ❌ ลบ overflow-y: auto ตรงนี้ออก (ถ้ามี) */
+  overflow: hidden;
+}
 
-    /* 1. เปลี่ยนจาก center เป็น flex-start เพื่อให้กล่องเด้งไปติดขอบบน */
+.sidebar {
+  flex-shrink: 0;
+  height: 100%;
+  /* ให้ Sidebar สูงเต็มจอเสมอ */
+}
+
+.main {
+  flex: 1;
+  height: 100%;
+  /* ให้พื้นที่เนื้อหาหลักสูงเต็มจอที่เหลือ */
+
+  /* ✅ 1. ใส่ Scroll ตรงนี้แทน เพื่อให้เลื่อนเฉพาะส่วนฟอร์ม */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  /* 2. ดันระยะห่างให้สวยงาม (บวกระยะ Safe Area สำหรับ iPad/iPhone) */
+  padding: 3rem 1rem calc(5rem + env(safe-area-inset-bottom)) 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem calc(130px + env(safe-area-inset-bottom)) 1rem;
     align-items: flex-start;
+  }
 
-    /* 2. ปรับระยะดันลงมาจากขอบบนตรงนี้ (5rem) ถ้าอยากให้สูงกว่านี้อีกให้ลดเลขลง (เช่น 3rem) */
-    padding: 1rem 1rem 2rem 1rem;
+  .form-wrapper {
+    width: 100%;
+    max-width: 500px;
+    background: $white;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    animation: slideUpFade 0.4s ease;
 
     @media (max-width: 768px) {
-      padding: 2rem 1rem;
-      /* ขยับระยะบนมือถือให้พอดี */
-      padding-bottom: 90px;
-      align-items: flex-start;
-      min-height: auto;
+      padding: 1.5rem; // ลด padding ในการ์ดเมื่ออยู่บนมือถือ
     }
 
-    .form-wrapper {
-      width: 100%;
-      max-width: 500px;
-      background: $white;
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
-      animation: slideUpFade 0.4s ease;
-
-      @media (max-width: 768px) {
-        padding: 1.5rem; // ลด padding ในการ์ดเมื่ออยู่บนมือถือ
-      }
-
-      h1 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: $text-main;
-        margin-bottom: 1.5rem;
-        text-align: center;
-      }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $text-main;
+      margin-bottom: 1.5rem;
+      text-align: center;
     }
   }
 }
