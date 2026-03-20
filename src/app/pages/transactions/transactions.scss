@@ -183,8 +183,6 @@ $hover-bg: #f1f5f9;
       overflow-x: auto;
       /* มือถือ: ยังต้องเลื่อนซ้ายขวาได้อยู่ */
       -webkit-overflow-scrolling: touch;
-      /* เผื่อพื้นที่ด้านล่างให้เมนูบรรทัดสุดท้าย (ลบ margin ติดลบทิ้งไปเลย ปุ่มจะได้ไม่โดนบัง) */
-      padding-bottom: 110px;
     }
   }
 
@@ -228,6 +226,18 @@ $hover-bg: #f1f5f9;
 
       &:last-child td {
         border-bottom: none;
+      }
+
+      &:nth-last-child(-n+2) {
+        .action-dropdown {
+          top: auto;
+          bottom: 100%;
+          /* ให้เด้งขึ้นไปข้างบนจุดที่กด */
+          margin-bottom: 5px;
+          /* เว้นระยะห่างนิดนึง */
+          box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+          /* ปรับเงาให้อยู่ด้านบน */
+        }
       }
     }
 
