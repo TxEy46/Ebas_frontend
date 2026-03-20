@@ -319,3 +319,116 @@ $transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   from { opacity: 0; transform: translateX(-5px); }
   to { opacity: 1; transform: translateX(0); }
 }
+
+/* =========================================
+   🚨 LOGOUT MODAL STYLES (Emerald Green Theme)
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6); // พื้นหลังมืดสลัว
+  backdrop-filter: blur(8px);      // เพิ่มความเบลอให้ดูหรูขึ้น
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;                  // มั่นใจว่าอยู่เหนือทุกอย่าง
+  animation: fadeIn 0.2s ease-out;
+
+  .modal-box {
+    background: $white;
+    padding: 2.5rem;
+    border-radius: 28px;           // โค้งมนมากขึ้น
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .icon-wrapper {
+      width: 72px;
+      height: 72px;
+      /* 🟢 เปลี่ยนเป็นสีเขียวอ่อน */
+      background: $green-light;
+      color: $green-main;
+      border-radius: 22px;         // ทรง Squircle
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      transform: rotate(-5deg);    // เอียงนิดๆ ให้ดูมีดีไซน์
+      
+      svg { width: 32px; height: 32px; }
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $text-main;
+      margin-bottom: 0.75rem;
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    .modal-desc {
+      color: $text-muted;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+
+      button {
+        flex: 1;
+        padding: 0.9rem;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+      }
+
+      .btn-cancel {
+        background: $hover-bg;
+        color: $text-muted;
+        &:hover { 
+          background: #e2e8f0; 
+          color: $text-main;
+        }
+      }
+
+      .btn-confirm {
+        /* 🟢 ปุ่มยืนยันสีเขียวเข้ม */
+        background: $green-main;
+        color: $white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+
+        &:hover { 
+          background: #059669; // เขียวเข้มขึ้น
+          transform: translateY(-2px);
+          box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+/* เพิ่ม Animation ให้ลื่นไหล */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
