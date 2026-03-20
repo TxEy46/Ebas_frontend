@@ -1,9 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+// 👇 เปลี่ยน \ เป็น / และใช้ ./ (ถ้าอยู่โฟลเดอร์เดียวกัน)
+import { ThaiDatePipe } from './thai-date-pipe'; 
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ThaiDatePipe],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

@@ -95,7 +95,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let t of recentTransactions">
-                  <td class="text-muted">{{ t.createdate | date:'d MMM yyyy' }}</td>
+                  <td class="text-muted"> {{ t.createdate | thaiDate }}</td>
                   <td class="font-medium">{{ t.name }}</td>
                   <td>
                     <div class="category-display">

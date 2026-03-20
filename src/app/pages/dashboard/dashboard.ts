@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js/auto';
 import { SidebarComponent } from '../../component/sidebar/sidebar';
 import { RouterModule, Router } from '@angular/router';
+import { ThaiDatePipe } from '../../thai-date-pipe';
 
 interface Transaction {
   id: string | number;
@@ -23,7 +24,7 @@ interface Transaction {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule, RouterModule],
+  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule, RouterModule, ThaiDatePipe],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })

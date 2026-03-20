@@ -4,6 +4,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SidebarComponent } from '../../component/sidebar/sidebar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'; // 🔹 เพิ่ม Router สำหรับเช็ค Login
+import { ThaiDatePipe } from '../../thai-date-pipe';
 
 interface Category {
   id: string;
@@ -30,7 +31,7 @@ interface Transaction {
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule],
+  imports: [CommonModule, HttpClientModule, SidebarComponent, FormsModule, ThaiDatePipe],
   templateUrl: './transactions.html',
   styleUrls: ['./transactions.scss']
 })
