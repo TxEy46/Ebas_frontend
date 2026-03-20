@@ -44,7 +44,7 @@
                                             </div>
                                         </td>
                                         <td class="align-right amount" [ngClass]="tx.type">
-                                            {{ tx.type === 'income' ? '+' : '-' }}${{ tx.amount | number:'1.2-2' }}
+                                            {{ tx.type === 'income' ? '+' : '-' }}฿{{ tx.amount | number:'1.2-2' }}
                                         </td>
                                         <td class="align-right date-col">{{ tx.createdate | date:'MMM d, yyyy, HH:mm' }}
                                         </td>
