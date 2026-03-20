@@ -39,7 +39,7 @@ $border-color: #e2e8f0;
   gap: 0.5rem;
   margin-bottom: 2rem;
   
-  .logo-icon { color: $green-main; }
+  .logo-icon { color: $green-main; width: 40px !important; height: 40px !important; }
   .logo-text {
     font-size: 1.8rem;
     font-weight: 800;

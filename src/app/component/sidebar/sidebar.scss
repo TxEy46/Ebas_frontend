@@ -98,6 +98,8 @@ $border-color: #e2e8f0;
       .logo-icon {
         color: $green-main;
         flex-shrink: 0;
+        width: 30px !important;
+        height: 30px !important;
       }
 
       .highlight {

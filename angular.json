@@ -28,7 +28,10 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.ico",
+              "src/assets",
+              "public"
             ],
             "styles": [
               "src/styles.scss"
@@ -39,7 +42,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb", 
+                  "maximumWarning": "1mb",
                   "maximumError": "2mb"
                 },
                 {
