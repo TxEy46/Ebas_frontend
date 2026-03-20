@@ -18,11 +18,13 @@ $hover-bg: #f1f5f9;
 }
 
 .page-layout {
-  height: 100vh; /* ล็อคความสูงจอนอกสุด */
+  height: 100vh;
+  /* ล็อคความสูงจอนอกสุด */
   background-color: $app-bg;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: $text-main;
-  overflow: hidden; /* ไม่ให้จอนอกสุดขยับ */
+  overflow: hidden;
+  /* ไม่ให้จอนอกสุดขยับ */
 }
 
 .layout {
@@ -39,10 +41,13 @@ $hover-bg: #f1f5f9;
 
 .content {
   flex: 1;
-  height: 100%; /* ให้ความสูงเต็มพื้นที่ที่เหลือ */
-  overflow-y: auto; /* ให้เลื่อนเฉพาะเนื้อหาข้างใน */
-  -webkit-overflow-scrolling: touch; /* ให้ iPhone เลื่อนลื่นๆ */
-  
+  height: 100%;
+  /* ให้ความสูงเต็มพื้นที่ที่เหลือ */
+  overflow-y: auto;
+  /* ให้เลื่อนเฉพาะเนื้อหาข้างใน */
+  -webkit-overflow-scrolling: touch;
+  /* ให้ iPhone เลื่อนลื่นๆ */
+
   min-width: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2rem 3rem;
@@ -61,40 +66,80 @@ $hover-bg: #f1f5f9;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    /* ปรับให้โปร่งขึ้นนิดนึงเข้ากับธีมใหม่ */
     flex-wrap: wrap;
     gap: 1.5rem;
 
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: flex-start;
-      gap: 1rem;
+      gap: 1.5rem;
     }
 
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0;
+    /* 👇 ซ้อนคลาส .header-titles เข้ามาจัดการเรื่องธีมเขียว */
+    .header-titles {
       position: relative;
-      display: inline-block;
-      background: linear-gradient(135deg, $text-main 0%, $blue-main 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      flex: 1;
 
-      @media (max-width: 768px) {
-        font-size: 1.8rem;
+      h1 {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem 0;
+        position: relative;
+        display: inline-block;
+
+        /* 🌿 1. Gradient ธีมสีเขียวมรกต */
+        background: linear-gradient(135deg, #047857 0%, $green-main 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+        /* ✨ 2. เงาเรืองแสงสีเขียว */
+        filter: drop-shadow(0px 4px 8px rgba(16, 185, 129, 0.15));
+
+        @media (max-width: 768px) {
+          font-size: 1.8rem;
+        }
+
+        /* ➖ 3. ขีดเส้นใต้ไล่สี Fade-out */
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 0;
+          width: 60px;
+          height: 5px;
+          background: linear-gradient(90deg, $green-main 0%, rgba(16, 185, 129, 0) 100%);
+          border-radius: 4px;
+        }
       }
 
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 0;
-        width: 40px;
-        height: 4px;
-        background: $green-main;
-        border-radius: 4px;
+      .subtitle {
+        margin: 16px 0 0 0;
+        line-height: 1.6;
+        max-width: 650px;
+        /* บังคับไม่ให้ข้อความยาวทะลุจอจนอ่านยาก */
+        display: flex;
+        align-items: flex-start;
+        /* ให้จุดอยู่ตรงบรรทัดแรกเสมอ */
+        gap: 10px;
+
+        /* 🟢 4. จุดสีเขียวกะพริบ */
+        &::before {
+          content: '';
+          display: block;
+          flex-shrink: 0;
+          /* ป้องกันจุดโดนบีบจนเบี้ยว */
+          width: 8px;
+          height: 8px;
+          margin-top: 10px;
+          /* ดันลงมาให้ตรงกับกึ่งกลางของข้อความบรรทัดแรก */
+          background-color: $green-main;
+          border-radius: 50%;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+          animation: pulseGreen 2s infinite;
+        }
       }
     }
 
@@ -138,8 +183,9 @@ $hover-bg: #f1f5f9;
 
           &:focus {
             outline: none;
-            border-color: $blue-main;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            border-color: $green-main;
+            /* 🔄 เปลี่ยนสี Focus เป็นสีเขียวด้วยให้เข้าธีม */
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
           }
         }
 

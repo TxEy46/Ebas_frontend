@@ -58,27 +58,38 @@ $orange-main: #f59e0b;
     }
 
     .header-section {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      /* เพิ่มระยะห่างด้านล่างให้ดูโปร่งขึ้น */
+      position: relative;
 
       h1 {
-        font-size: 2.2rem;
+        font-size: 2.4rem;
+        /* ขยายขนาดตัวอักษรขึ้นนิดหน่อย */
         font-weight: 800;
-        margin: 0 0 0.25rem 0;
+        margin: 0 0 0.5rem 0;
         position: relative;
         display: inline-block;
-        background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+
+        /* 🌿 1. เปลี่ยน Gradient เป็นธีมสีเขียว (มรกตเข้ม -> เขียวสว่าง) */
+        background: linear-gradient(135deg, #047857 0%, $green-main 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
 
+        /* ✨ 2. เพิ่มเงาเรืองแสงสีเขียวอ่อนๆ ให้ตัวหนังสือดูมีมิติ */
+        filter: drop-shadow(0px 4px 8px rgba(16, 185, 129, 0.15));
+
+        /* ➖ 3. ตกแต่งเส้นขีดเส้นใต้ให้ไล่สีหายไปเนียนๆ */
         &::after {
           content: '';
           position: absolute;
-          bottom: -4px;
+          bottom: -6px;
           left: 0;
-          width: 40px;
-          height: 4px;
-          background: $green-main;
+          width: 60px;
+          /* ทำให้เส้นยาวขึ้น */
+          height: 5px;
+          /* ทำให้เส้นหนาขึ้น */
+          background: linear-gradient(90deg, $green-main 0%, rgba(16, 185, 129, 0) 100%);
           border-radius: 4px;
         }
       }
@@ -86,8 +97,25 @@ $orange-main: #f59e0b;
       .subtitle {
         color: $text-muted;
         font-weight: 500;
-        font-size: 0.95rem;
-        margin: 10px 0 0 0;
+        font-size: 1rem;
+        margin: 12px 0 0 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        /* ระยะห่างระหว่างจุดกับข้อความ */
+
+        /* 🟢 4. เพิ่มจุดสีเขียว Status Indicator ด้านหน้าข้อความ */
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          background-color: $green-main;
+          border-radius: 50%;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+          animation: pulseGreen 2s infinite;
+          /* เรียกใช้ Animation กะพริบ */
+        }
       }
     }
 
@@ -923,6 +951,20 @@ $orange-main: #f59e0b;
         width: 100%;
         text-align: center;
       }
+    }
+  }
+
+  @keyframes pulseGreen {
+    0% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+
+    70% {
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
     }
   }
 }
